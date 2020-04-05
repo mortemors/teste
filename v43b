@@ -66,7 +66,7 @@ function setMenu() {
   email_usuario_alpha();
   updateVersion();
   
-  ui.alert('IMPORTANTE: \n -Para erro "#N/D" na aba Dados-> Rode o script Atualizar Ativos/Cotação pelo menu dlombello. \n -Para erro "Lucro Dia", "% dia" ou cotação na aba Carteira-> Atualize a pagina (F5)');
+  ui.alert('IMPORTANTE: \n -Doutor é quem tem doutorado!');
 }
 
 ////////////////////////////////////////////////////////////////////////////
