@@ -2,7 +2,7 @@ function sistema(){ return "https://sistema.dlombelloplanilhas.com/"}
 //////MORTE//////////////////////////////////////////////
 //MENU DLOMBELLO
 ////////////////////////////////////////////////////////////////////////////
-function setMenu() {
+function setMenu() {   
   var ui = SpreadsheetApp.getUi()
   ui.createMenu('dlombello')  
   .addSubMenu(ui.createMenu('Importar Abas')
@@ -61,11 +61,11 @@ function setMenu() {
   .addItem('Verificar Atualização', 'VERSAO') 
   .addItem('Sobre / Usuários Alpha', 'SOBRE')  
   .addToUi()
-  
+
   hitCounter();
   email_usuario_alpha();
   updateVersion();
-  
+
   ui.alert('IMPORTANTE: \n -Para erro "#N/D" na aba Dados-> Rode o script Atualizar Ativos/Cotação pelo menu dlombello. \n -Para erro "Lucro Dia", "% dia" ou cotação na aba Carteira-> Atualize a pagina (F5)');
 }
 
@@ -80,23 +80,23 @@ function version_update(script_text){
 function updateVersion() {   
   //Rotina de atualização pra última versão disponível
   var tss = SpreadsheetApp.getActiveSpreadsheet();
-  
+
   var tss_leiame = tss.getSheetByName("LeiaMe");
   var tss_version = tss_leiame.getRange(5, 2).getValue();  
   var versao = parseFloat(tss_version.replace(/[^0-9]/g, ''))   
-  
+
   var ui = SpreadsheetApp.getUi();
   var ver, result;
-  
+
   if(versao >= 4316){ return 'atualizada' } 
-  
+
   else if(versao <= 4305){    
     ver = 'v4.3.06';
     result = ui.alert(
       'Existe uma atualização disponível ('+ver+'). \n -Atualização de fórmulas nas abas: Cotação, Carteira e Email. \n\n Deseja atualizar agora?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return}        
-    
+
     //atualizar_aba("","Cotação")   //Correção de erros de Lucro dia zerados (L5:L)
     //atualizar_aba("","Carteira")  //Correção de calculo de % Lucro dia em relação ao dia anterior (C8 / H8)
     atualizar_aba("","Email")     //Correção de calculo de % Lucro dia em relação ao dia anterior (D4)    
@@ -109,7 +109,7 @@ function updateVersion() {
       'Existe uma atualização disponível ('+ver+'). \n -Atualização de fórmulas nas abas: Dados, Carteira, DARF e DIRPF. \n\n ATENÇÃO: Os dados digitados manualmente (células amarelas) na aba DARF serão apagados. Antes de continuar anote-os para preenchimento após atualização da versão! \n\n Deseja atualizar agora?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return}
-    
+
     //var darf = atualizar_aba("","DARF") //Caixa de seleção de V.SUB FII tributados em 15% (U2) e correção vendas ativos isentos. Lei 13.043/14 (B5:B28,G5:H28)
     //if(darf == 'no_update') {return 'no_update'}
     //atualizar_aba("","DIRPF")     //Atualização necessária devido atualização da aba DARF.
@@ -125,7 +125,7 @@ function updateVersion() {
   //'Existe uma atualização disponível ('+ver+'). \n -Atualização de fórmulas nas abas: Cotação e DARF. \n\n ATENÇÃO: Os dados digitados manualmente (células amarelas) na aba DARF serão apagados. Antes de continuar anote-os para preenchimento após atualização da versão! \n\n Deseja atualizar agora?',
   // ui.ButtonSet.YES_NO);  
   //if(result!=ui.Button.YES){return}
-  
+
   //var aux = atualizar_aba("","DARF") //Correção Cálculos ativos isentos Lei 13.043/14 - SQIA3 isenção ate 05/09/2019 - Isenção Op DT desses ativos (B5:B28,G5:H28,V5:V28)
   //if(aux == 'no_update') {return 'no_update'}
   //atualizar_aba("","DIRPF")     //Atualização necessária devido atualização da aba DARF.
@@ -140,24 +140,24 @@ function updateVersion() {
       'Existe uma atualização disponível ('+ver+'). \n -Atualização de fórmulas nas abas: Radar, Cotação, Carteira, DARF e DIRPF. \n\n Deseja atualizar agora?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return}      
-    
+
     var aux = atualizar_aba("","Radar") //Aumento a quantidade de linhas para ativos de ações e suporte a ativos internacionais
     if(aux == 'no_update') {return 'no_update'}
     var aux = atualizar_aba("","DARF") //Correção de isenção do lucro de FIP IE (J5:J)
     if(aux == 'no_update') {return 'no_update'}
-    
+
     atualizar_aba("","Cotação")   //Implementacao para cotacao dos ativos internacionais em BRL para aba Radar (L5:L)
     atualizar_aba("","Carteira")  //Alteração de formula pra compatibilidade com ativos de mercado externo (K5:L)
     atualizar_aba("","DIRPF")     //Correcao de formulas de dados dos ativos (AV4, BE4, AX, AM4:AM)    
-    
+
     atualizar_aba("","BETA")      //Necessário devido atualizaçao aba Radar
     atualizar_aba("","Setor")     //Necessário devido atualizaçao aba Radar
-    
+
     Utilities.sleep(3000)
     calc_operacoes();
-    
+
     ui.alert('Caso seja Usuário Alpha, ative novamente a aba DIRPF no menu dlombello>Recursos Extras');
-    
+
     tss_leiame.getRange(5, 2).setValue(ver);
     ui.alert('Planilha atualizada! \n\n Mais informações em: https://sistema.dlombelloplanilhas.com/scripts/atualizacoes');
   }  
@@ -167,19 +167,19 @@ function updateVersion() {
       'Existe uma atualização disponível ('+ver+'). \n -Atualização de fórmulas nas abas: Radar, Cotação e DIRPF. \n\n Deseja atualizar agora?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return}      
-    
+
     var aux = atualizar_aba("","Radar") //Correção da Alocação na aba Radar para ativos Internacionais
     if(aux == 'no_update') {return 'no_update'}        
     //atualizar_aba("","Cotação") //Necessário devido atualizaçao aba Radar
     atualizar_aba("","BETA")      //Necessário devido atualizaçao aba Radar
     atualizar_aba("","Setor")     //Necessário devido atualizaçao aba Radar
-    
+
     atualizar_aba("","Cotação")   //Correção de formula para cotacao dos ativos (L5:L)
     atualizar_aba("","DIRPF")     //Correcao de formulas de dados dos ativos (AV4, BE4, AX, AM4:AM)  
-    
+
     Utilities.sleep(3000)
     calc_operacoes();
-    
+
     tss_leiame.getRange(5, 2).setValue(ver);
     ui.alert('Planilha atualizada para ('+ver+')! \n Mais informações em: https://sistema.dlombelloplanilhas.com/scripts/atualizacoes');
   }
@@ -189,15 +189,15 @@ function updateVersion() {
       'Existe uma atualização disponível ('+ver+'). \n -Atualização nas abas: Cotação, Proventos e DIRPF  \n\n Deseja atualizar agora?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return}      
-    
+
     atualizar_aba("","Cotação")   //Correção de formula para cotacao dos ativos (L5:L) e ajuste calculo de proventos creditados e nao pagos (I5:I);
     atualizar_aba("","Proventos") //Criado evento de CRED.NAO.PAGO(JSCP);
     atualizar_aba("","FluxoCaixa",'fluxoCaixa_aux')
     atualizar_aba("","DIRPF")     //Atualização Lucro isento ate 2023 em Rendimentos isentos (AX4) e ajuste de proventos creditados e nao pagos ();
     ui.alert('Caso seja Usuário Alpha, ative novamente a aba DIRPF no menu dlombello>Recursos Extras');
-     
+
     //Utilities.sleep(2000); calc_operacoes();
-    
+
     tss_leiame.getRange(5, 2).setValue(ver);
     ui.alert('Planilha atualizada para ('+ver+')! \n Mais informações em: https://sistema.dlombelloplanilhas.com/scripts/atualizacoes');
   }
@@ -207,21 +207,21 @@ function updateVersion() {
       'Existe uma atualização disponível ('+ver+'). \n -Atualização nas abas: Cotação, Proventos e DIRPF  \n\n Deseja atualizar agora?',
       ui.ButtonSet.YES_NO);  
       if(result!=ui.Button.YES){return}      
-       
+
       var aux = atualizar_aba("","DARF"); 
       if(aux == 'no_update') {return 'no_update'} //Ajuste calculos de IRRF a deduzir - OK
-      
+
       atualizar_aba("","Cotação")   //Ajuste no calculo de Proventos CRED.NAO.PAGO na TIR; (J5:J) - OK      
-      
+
       atualizar_aba("","DIRPF")     //Ajuste descrição rendimentos isentos de FIIs e CRED.NAO.PAGO em Tributação Exclusiva - OK
       ui.alert('Caso seja Usuário Alpha, ative novamente a aba DIRPF no menu dlombello>Recursos Extras');
-      
+
       //Utilities.sleep(2000); calc_operacoes();
-      
+
       tss_leiame.getRange(5, 2).setValue(ver);
       ui.alert('Planilha atualizada para ('+ver+')! \n Mais informações em: https://sistema.dlombelloplanilhas.com/scripts/atualizacoes');
     }
-  
+
 }
 
 //ATUALIZACAO DAS FORMULAS DAS ABAS
@@ -237,7 +237,7 @@ function atualizar_aba(id,aba,aux) {
       ui.ButtonSet.YES_NO);      
     if(result=="CLOSE"){return}  
     aba = activeSheetName
-    
+
     if(result==ui.Button.NO){
       var result = ui.prompt(
         'Digite abaixo o nome da aba que deseja atualizar. \n Ex: Cotação',
@@ -248,24 +248,24 @@ function atualizar_aba(id,aba,aux) {
       aba = texto.trim()
     }
   } 
-  
+
   var abas_off ="Alocação,Outros"   
   if(abas_off.indexOf(aba)>=0){
     ui.alert('A atualização da aba selecionada ainda não está disponível. \n Faça a cópia através do link do site ou pasta Alpha!')
     return;
   }  
-  
+
   if(!id) {id = "1osvOHmoF20MqjPlQC2xAdnaLIeQkgDLMwYUzDSgRrXQ"}
   var oss = SpreadsheetApp.openById(id);
   var oss_version = parseFloat((oss.getSheetByName('LeiaMe').getRange("B5").getValue()).replace(/[^0-9]/g, ''));
   var tss_version = parseFloat((tss.getSheetByName('LeiaMe').getRange("B5").getValue()).replace(/[^0-9]/g, ''));
-  
+
   var aux = (oss_version != oss_version)
   if(aux) {
     ui.alert('Versão da planilha de origem não compatível! \n Atualize a planilha fazendo uma nova cópia pelo site.')
     return;
   }
-  
+
   try {
     var tss_aba = tss.getSheetByName(aba)    
     var oss_aba = oss.getSheetByName(aba)
@@ -276,29 +276,29 @@ function atualizar_aba(id,aba,aux) {
   var oss_lr = oss_aba.getLastRow()
   var oss_lc = oss_aba.getLastColumn()    
   var tss_lr = tss_aba.getLastRow()
-  
+
   if(aba == "Dados" || aba == "DayTrade") {  
     var formulas = oss_aba.getRange(7,9,oss_lr-6,oss_lc-8).getFormulas()    
     tss_aba.getRange(7,9,formulas.length, formulas[0].length).setFormulas(formulas)
-    
+
     if(tss_lr>oss_lr){
       var tss_lastData_row = tss_aba.getRange("A4").getValue()
       var data = tss_aba.getRange(7,1,tss_lastData_row-6,8).getValues()    
-      
+
       var tssMaxRow = tss_aba.getMaxRows()
       tss_aba.deleteRows(oss_lr, tssMaxRow-oss_lr)
       tss_aba.getRange("A7:H").clearContent()    
-      
+
       if(data.length>oss_lr-6) {import_AddRow(tss_aba, tss_lastData_row, 7)}
       tss_aba.getRange(7,1,data.length, data[0].length).setValues(data)    
     }
     return;
   }
-  
+
   else if(aba == "Proventos"){
     var formulas = oss_aba.getRange(7,1,1,5).getFormulas();    
     tss_aba.getRange(7,1,1,5).setFormulas(formulas)
-    
+
     var validationText = 'DIVIDENDO,JRS CAP PROPRIO,RENDIMENTO,BONIFICACAO,AMORTIZACAO,BTC,V.SOB(BN),REEMBOLSO(DIV),REEMBOLSO(JSCP),CRED.NAO.PAGO(JSCP)'
     var array = validationText.split(',')
     var cell = tss_aba.getRange('S7:S')
@@ -306,41 +306,41 @@ function atualizar_aba(id,aba,aux) {
     cell.setDataValidation(rule);   
     return;
   }
-  
+
   else if(aba == "Radar"){
     var result = ui.alert(
       'ATENÇÃO: Os dados digitados manualmente (células amarelas) na aba RADAR serão apagados. Antes de continuar anote-os em uma aba auxliar para preenchimento após atualização! \n\n Deseja continuar?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return 'no_update'}
-    
+
     var tss_sheet = tss.getSheetByName(aba)   
     tss.deleteSheet(tss_sheet)
-    
+
     var oss_sheet = oss.getSheetByName(aba)     
     oss_sheet.copyTo(tss).setName(aba)
-    
+
     tss.getSheetByName(aba).activate()
     tss.moveActiveSheet(5)
     return;
   }
-  
+
   else if(aba == "DARF"){
     var result = ui.alert(
       'ATENÇÃO: Os dados digitados manualmente (células amarelas) na aba DARF serão apagados. Antes de continuar anote-os para preenchimento após atualização! \n\n Deseja continuar?',
       ui.ButtonSet.YES_NO);  
     if(result!=ui.Button.YES){return 'no_update'}
-    
+
     var tss_sheet = tss.getSheetByName(aba)   
     tss.deleteSheet(tss_sheet)
-    
+
     var oss_sheet = oss.getSheetByName(aba)     
     oss_sheet.copyTo(tss).setName(aba)
-    
+
     tss.getSheetByName(aba).activate()
     tss.moveActiveSheet(10)
     return;
   }
-  
+
   else if(aba == "FluxoCaixa" && aux == 'fluxoCaixa_aux'){
     var oss_aba = oss.getSheetByName("FluxoCaixa"); //Ajuste calculo de proventos creditados e nao pagos (G44:G);
     var tss_aba = tss.getSheetByName("FluxoCaixa"); 
@@ -348,7 +348,7 @@ function atualizar_aba(id,aba,aux) {
     tss_aba.getRange('G44:G').setFormula(formula);  
     return;
   }
-  
+
   else {
     var value = oss_aba.getRange(1,1,oss_lr,oss_lc).getValues()
     var formulas = oss_aba.getRange(1,1,oss_lr,oss_lc).getFormulas();
@@ -455,18 +455,18 @@ function oss_function(){
   var url_range = tss_leiame.getRange(8, 2);
   var url = url_range.getValue();
   var info = ["ERROR","ERROR"] 
-  
+
   if (url.indexOf("https://docs.google.com/")== 0){    
     var oss = SpreadsheetApp.openByUrl(url); //planilha de origem para importação de dados    
     var oss_version = parseFloat((oss.getSheetByName('LeiaMe').getRange(2,3).getValue()).replace('v','').replace(' ',''));
-    
+
     if (oss_version < 3.1){
       var ui = SpreadsheetApp.getUi();
       ui.alert('Ops! Sua versão é bem antiga einh! =(\nAtualize sua planilha pra uma versão 3.1 e tente novamente.');
     } else {       
       info = [oss,oss_version]  
     }
-    
+
   } else {
     tss_leiame.setActiveCell(url_range);  
     var ui = SpreadsheetApp.getUi();
@@ -478,19 +478,19 @@ function oss_function(){
 //SCRIPT DE IMPORTAÇÃO DE ABAS
 function import_data(aba){
   var oss_array = oss_function();
-  
+
   if (oss_array[0] != "ERROR") {
     var oss = oss_array[0];
     var oss_version = oss_array[1];  
-    
+
     var formula = '=MAX(ARRAYFORMULA(IF(LEN(A7:A);ROW(A7:A);"")))';
     var dados_lr = 'DADOS_LROW'
     var daytrade_lr = 'DAYTRADE_LROW'
     var proventos_lr = 'PROVENTOS_LROW'  
-    
+
     if (oss!=undefined) {
       var tss = SpreadsheetApp.getActiveSpreadsheet();   
-      
+
       if(aba == 'Dados'){
         if(oss_version == 3.1){ 
           formula = '=MAX(ARRAYFORMULA(IF(LEN(B7:B);ROW(B7:B);"")))' 
@@ -500,7 +500,7 @@ function import_data(aba){
         Utilities.sleep(1000);
         dados_daytrade_proventos(oss, tss, aba, oss_version, dados_lr) 
       }
-      
+
       else if(aba == 'DayTrade' ){
         if(oss_version == 3.1){ 
           formula = '=MAX(ARRAYFORMULA(IF(LEN(B7:B);ROW(B7:B);"")))' 
@@ -511,7 +511,7 @@ function import_data(aba){
         Utilities.sleep(1000);
         dados_daytrade_proventos(oss, tss, aba, oss_version, daytrade_lr)
       }
-      
+
       else if(aba == 'Proventos'){
         if(oss_version == 3.1){ proventos_lr = 'A2'}
         oss.getSheetByName(aba).getRange(proventos_lr).setFormula(formula) 
@@ -528,10 +528,10 @@ function import_data(aba){
 function dados_daytrade_proventos(oss, tss, aba, oss_version, lr){  
   var tss_aba = tss.getSheetByName(aba);
   var oss_aba = oss.getSheetByName(aba);
-  
+
   if(aba == 'Dados' || aba == 'DayTrade'){
     var lastNonBlankRow = oss_aba.getRange(lr).getValue() 
-    
+
     if(aba == 'Dados') { 
       var pm_corretora = oss_aba.getRange('O2').getValue();
       tss_aba.getRange('O2').setValue(pm_corretora)      
@@ -557,21 +557,21 @@ function dados_daytrade_proventos(oss, tss, aba, oss_version, lr){
 function range_dados(oss, tss, oss_version, lastNonBlankRow){
   var tss_ini_range = tss.getRangeByName('DADOS_INICIO');  
   var tss_range, oss_range
-  
+
   tss_range = [tss_ini_range.getRow(), tss_ini_range.getColumn(), 1, 1]
-  
+
   if(oss_version == 3.1){
     oss_range = [7, 2, 1, 7]
   } else {
     var oss_ini_range = oss.getRangeByName('DADOS_INICIO'); 
     oss_range = [oss_ini_range.getRow(), oss_ini_range.getColumn(), 1, 8]
   }
-  
+
   var oss_qtd_row = lastNonBlankRow - (oss_range[0]-1);  
-  
+
   var range  
   var range_array = [] 
-  
+
   range = [[oss_range[0], oss_range[1], oss_qtd_row, oss_range[3]],[tss_range[0], tss_range[1], oss_qtd_row, oss_range[3]]]     
   range_array.push(range);  
   return range_array;    
@@ -580,21 +580,21 @@ function range_dados(oss, tss, oss_version, lastNonBlankRow){
 function range_daytrade(oss, tss, oss_version, lastNonBlankRow){  
   var tss_ini_range = tss.getRangeByName('DAYTRADE_INICIO');  
   var tss_range, oss_range
-  
+
   tss_range = [tss_ini_range.getRow(), tss_ini_range.getColumn(), 1, 1]
-  
+
   if(oss_version == 3.1){
     oss_range = [7, 2, 1, 7]
   } else {
     var oss_ini_range = oss.getRangeByName('DAYTRADE_INICIO'); 
     oss_range = [oss_ini_range.getRow(), oss_ini_range.getColumn(), 1, 8]
   }
-  
+
   var oss_qtd_row = lastNonBlankRow - (oss_range[0]-1);  
-  
+
   var range  
   var range_array = [] 
-  
+
   range = [[oss_range[0], oss_range[1], oss_qtd_row, oss_range[3]],[tss_range[0], tss_range[1], oss_qtd_row, oss_range[3]]]  
   range_array.push(range);  
   return range_array;    
@@ -603,9 +603,9 @@ function range_daytrade(oss, tss, oss_version, lastNonBlankRow){
 function range_proventos(tss, oss_aba, tss_aba, oss_version, lastNonBlankRow){
   var oss_qtd_row  
   oss_qtd_row = lastNonBlankRow - (7-1);
-  
+
   if(oss_version < 3.1) { return }
-  
+
   else if(oss_version < 4.2){  
     if(oss_version <= 4.0) {var class_col = 6} else {var class_col = 7}
     var dados = oss_aba.getRange(7,1,oss_qtd_row,8).getValues()
@@ -625,7 +625,7 @@ function range_proventos(tss, oss_aba, tss_aba, oss_version, lastNonBlankRow){
     var proventos = oss_aba.getRange(7,1,oss_qtd_row,4).getValues()
     tss_aba.getRange(7,tss_aba.getRange('PROVENTOS_MANUAL_DADOS').getColumn(),proventos.length,4).setValues(proventos)    
   }
-  
+
   if(oss_version < 4.0) { var fonte = oss_aba.getRange('J5').getValue() } 
   else { var fonte = oss_aba.getRange('PROVENTOS_FONTE').getValue() }  
   tss_aba.getRange('PROVENTOS_FONTE').setValue(fonte) 
@@ -652,11 +652,11 @@ function copia_range_tss_tss(origem, destino, range_array){
 //ADICIONA LINHAS NA IMPORTAÇÃO SE NECESSÁRIO (DADOS, DAYTRADE E PROVENTOS)
 function import_AddRow(tss_aba, lastNonBlankRow, tss_ini_row){
   var tss_lastRow = tss_aba.getLastRow(); 
-  
+
   if(lastNonBlankRow > tss_lastRow){     
     var tss_lastCol = tss_aba.getLastColumn();
     var qtd_row = 100; 
-    
+
     while (tss_lastRow < lastNonBlankRow) {      
       tss_aba.insertRowsAfter(tss_lastRow, qtd_row); 
       var range = tss_aba.getRange(tss_ini_row, 1, qtd_row, tss_lastCol);
@@ -671,25 +671,25 @@ function import_AddRow(tss_aba, lastNonBlankRow, tss_ini_row){
 function transferealocacao(oss, tss, aba, oss_version){  
   var oss_alocacao = oss.getSheetByName('Alocação');
   var tss_alocacao = tss.getSheetByName('Alocação');
-  
+
   var tss_col_aloc_geral_outros = tss_alocacao.getRange('ALOCACAO_GERAL_OUTROS').getColumn();
   var tss_row_aloc_geral_outros = tss_alocacao.getRange('ALOCACAO_GERAL_OUTROS').getRow();
   var tss_col_aloc_aporte = tss_alocacao.getRange('ALOCACAO_APORTE').getColumn();
   var tss_row_aloc_aporte = tss_alocacao.getRange('ALOCACAO_APORTE').getRow();
-  
+
   var tss_col_aloc_acao_aloc = tss_alocacao.getRange('ALOCACAO_ACAO_ALOCACAO').getColumn();
   var tss_row_aloc_acao_aloc = tss_alocacao.getRange('ALOCACAO_ACAO_ALOCACAO').getRow();
   var tss_col_aloc_acao_ativo = tss_alocacao.getRange('ALOCACAO_ACAO_ATIVO').getColumn();
   var tss_row_aloc_acao_ativo = tss_alocacao.getRange('ALOCACAO_ACAO_ATIVO').getRow();
-  
+
   var tss_col_aloc_fii_aloc = tss_alocacao.getRange('ALOCACAO_FII_ALOCACAO').getColumn();
   var tss_row_aloc_fii_aloc = tss_alocacao.getRange('ALOCACAO_FII_ALOCACAO').getRow();
   var tss_col_aloc_fii_ativo = tss_alocacao.getRange('ALOCACAO_FII_ATIVO').getColumn();
   var tss_row_aloc_fii_ativo = tss_alocacao.getRange('ALOCACAO_FII_ATIVO').getRow();
-  
+
   var tss_col_aloc_outros_aloc = tss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getColumn();
   var tss_row_aloc_outros_aloc = tss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getRow();
-  
+
   var oss_aporte       
   var oss_geral       
   var oss_acao_ativo 
@@ -700,11 +700,11 @@ function transferealocacao(oss, tss, aba, oss_version){
   var oss_outros_aloc 
   var oss_inter_ativo
   var oss_inter_aloc 
-  
+
   var alocacao;
-  
+
   if(oss_version == 3.1){
-    
+
     oss_aporte = [5, 18, 1, 1];        
     oss_geral = [6, 14, 4, 1];        
     oss_acao_ativo = [8, 3, 50, 1];
@@ -713,65 +713,65 @@ function transferealocacao(oss, tss, aba, oss_version){
     oss_fii_aloc = [62, 7, 50, 1];
     oss_outros_ativo = [12, 12, 50, 1];
     oss_outros_aloc = [12, 14, 50, 1];
-    
+
   } else {
-    
+
     oss_aporte = [oss_alocacao.getRange('ALOCACAO_APORTE').getRow(), oss_alocacao.getRange('ALOCACAO_APORTE').getColumn(), 1, 1];     
     oss_geral = [oss_alocacao.getRange('ALOCACAO_GERAL_OUTROS').getRow(), oss_alocacao.getRange('ALOCACAO_GERAL_OUTROS').getColumn(), 4, 1];       
     oss_acao_ativo = [oss_alocacao.getRange('ALOCACAO_ACAO_ATIVO').getRow(), oss_alocacao.getRange('ALOCACAO_ACAO_ATIVO').getColumn(), 50, 1];
     oss_acao_aloc = [oss_alocacao.getRange('ALOCACAO_ACAO_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_ACAO_ALOCACAO').getColumn(), 50, 1];    
     oss_fii_ativo = [oss_alocacao.getRange('ALOCACAO_FII_ATIVO').getRow(), oss_alocacao.getRange('ALOCACAO_FII_ATIVO').getColumn(), 50, 1];
     oss_fii_aloc = [oss_alocacao.getRange('ALOCACAO_FII_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_FII_ALOCACAO').getColumn(), 50, 1];
-    
+
     if(oss_version == 4.0) {
       oss_outros_ativo = [oss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getColumn()-4, 50, 1];
     } else {
       oss_outros_ativo = [oss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getColumn()-3, 50, 1];
     }
     oss_outros_aloc = [oss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_OUTROS_ALOCACAO').getColumn(), 50, 1];
-    
+
     try{ 
       oss_inter_ativo = [oss_alocacao.getRange('ALOCACAO_INTER_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_INTER_ALOCACAO').getColumn()-3, 50, 1];
       oss_inter_aloc = [oss_alocacao.getRange('ALOCACAO_INTER_ALOCACAO').getRow(), oss_alocacao.getRange('ALOCACAO_INTER_ALOCACAO').getColumn(), 50, 1];      
     } catch (error) {}
   }
-  
+
   clear_alocacao('all')
-  
+
   //Aporte
   alocacao = oss_alocacao.getRange(oss_aporte[0], oss_aporte[1], oss_aporte[2] ,oss_aporte[3]).getValue();
   tss_alocacao.getRange(tss_row_aloc_aporte, tss_col_aloc_aporte, oss_aporte[2] ,oss_aporte[3]).setValue(alocacao);
-  
+
   //Dados Geral
   alocacao = oss_alocacao.getRange(oss_geral[0], oss_geral[1], oss_geral[2], oss_geral[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_geral_outros, tss_col_aloc_geral_outros, oss_geral[2], oss_geral[3]).setValues(alocacao);
-  
+
   //Ações
   alocacao = oss_alocacao.getRange(oss_acao_ativo[0], oss_acao_ativo[1], oss_acao_ativo[2], oss_acao_ativo[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_acao_ativo, tss_col_aloc_acao_ativo, oss_acao_ativo[2], oss_acao_ativo[3]).setValues(alocacao);
-  
+
   alocacao = oss_alocacao.getRange(oss_acao_aloc[0], oss_acao_aloc[1], oss_acao_aloc[2], oss_acao_aloc[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_acao_aloc, tss_col_aloc_acao_aloc, oss_acao_aloc[2], oss_acao_aloc[3]).setValues(alocacao);
-  
+
   //FII
   alocacao = oss_alocacao.getRange(oss_fii_ativo[0], oss_fii_ativo[1], oss_fii_ativo[2], oss_fii_ativo[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_fii_ativo, tss_col_aloc_fii_ativo, oss_fii_ativo[2], oss_fii_ativo[3]).setValues(alocacao);
-  
+
   alocacao = oss_alocacao.getRange(oss_fii_aloc[0], oss_fii_aloc[1], oss_fii_aloc[2], oss_fii_aloc[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_fii_aloc, tss_col_aloc_fii_aloc,  oss_fii_aloc[2], oss_fii_aloc[3]).setValues(alocacao);
-  
+
   //Outros
   alocacao = oss_alocacao.getRange(oss_outros_ativo[0], oss_outros_ativo[1], oss_outros_ativo[2], oss_outros_ativo[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_outros_aloc, tss_col_aloc_outros_aloc-3, oss_outros_aloc[2], oss_outros_aloc[3]).setValues(alocacao);
-  
+
   alocacao = oss_alocacao.getRange(oss_outros_aloc[0], oss_outros_aloc[1], oss_outros_aloc[2], oss_outros_aloc[3]).getValues();
   tss_alocacao.getRange(tss_row_aloc_outros_aloc, tss_col_aloc_outros_aloc, oss_outros_aloc[2], oss_outros_aloc[3]).setValues(alocacao);
-  
+
   //Inter
   try {
     alocacao = oss_alocacao.getRange(oss_inter_ativo[0], oss_inter_ativo[1], oss_inter_ativo[2], oss_inter_ativo[3]).getValues();
     tss_alocacao.getRange(oss_inter_ativo[0], oss_inter_ativo[1], oss_inter_ativo[2], oss_inter_ativo[3]).setValues(alocacao);
-    
+
     alocacao = oss_alocacao.getRange(oss_inter_ativo[0], oss_inter_ativo[1], oss_inter_ativo[2]-3, oss_inter_ativo[3]).getValues();
     tss_alocacao.getRange(oss_inter_ativo[0], oss_inter_ativo[1], oss_inter_ativo[2]-3, oss_inter_ativo[3]).setValues(alocacao);        
   } catch(error) {}
@@ -781,10 +781,10 @@ function transferealocacao(oss, tss, aba, oss_version){
 function transfereradar(oss, tss, aba, oss_version){
   var tss_aba = tss.getSheetByName(aba);
   var oss_aba = oss.getSheetByName(aba);
-  
+
   var oss_leiame = oss.getSheetByName("LeiaMe");  
   var oss_version = parseFloat((oss_leiame.getRange(5,2).getValue()).replace(/[^0-9]/g, ''))  
-  
+
   var oss_ini_row_acao, oss_ini_row_fii, oss_col_ativos, oss_col_teto, oss_qtd_row;
   if(oss_version == 3117){ 
     oss_ini_row_acao = 23     
@@ -807,23 +807,23 @@ function transfereradar(oss, tss, aba, oss_version){
     oss_col_teto = 5
     oss_qtd_row = 100
   }
-  
+
   var tss_ini_row_acao, tss_ini_row_fii, tss_col_ativos, tss_col_teto  
   tss_ini_row_acao = 21
   tss_ini_row_fii = 126
   tss_col_ativos = 2
   tss_col_teto = 5  
-  
+
   tss_aba.getRange('B21:B120').clearContent();
   tss_aba.getRange('E21:E120').clearContent();
   tss_aba.getRange('B126:B').clearContent();
   tss_aba.getRange('E126:E').clearContent();   
-  
+
   var acao_array = [[oss_ini_row_acao, oss_col_ativos, oss_qtd_row, 1],[tss_ini_row_acao, tss_col_ativos, oss_qtd_row, 1]]  
   var acao_array_teto = [[oss_ini_row_acao, oss_col_teto, oss_qtd_row, 1],[tss_ini_row_acao, tss_col_teto, oss_qtd_row, 1]]  
   var fii_array = [[oss_ini_row_fii, oss_col_ativos, oss_qtd_row, 1],[tss_ini_row_fii, tss_col_ativos, oss_qtd_row, 1]]  
   var fii_array_teto = [[oss_ini_row_fii, oss_col_teto, oss_qtd_row, 1],[tss_ini_row_fii, tss_col_teto, oss_qtd_row, 1]]
-  
+
   var range_array = [] 
   range_array.push(acao_array)
   range_array.push(acao_array_teto)
@@ -842,7 +842,7 @@ function importdarf(){
 function transfereoutros(oss, tss, aba, oss_version){  
   var oss_outros = oss.getSheetByName('Outros');
   var tss_outros = tss.getSheetByName('Outros');  
-  
+
   var tss_slot_count = tss_outros.getRange('OUTROS_SLOT_COUNT').getValue(); 
   if(tss_slot_count>0) {
     var ui = SpreadsheetApp.getUi(); 
@@ -867,18 +867,18 @@ function transfereoutros(oss, tss, aba, oss_version){
 function transfereoutros_v4x(oss_outros, tss_outros) {  
   var oss_slot_anoinicio = oss_outros.getRange('OUTROS_ANO_INICIO')  
   var oss_slot_count = oss_outros.getRange('OUTROS_SLOT_COUNT') 
-  
+
   var oss_slot_tipo = oss_outros.getRange('OUTROS_SLOT1_TIPO')
   var oss_slot_aporte = oss_outros.getRange('OUTROS_SLOT1_APORTE')   
-  
+
   var qtd_slots = oss_slot_count.getValue()  
   if(!qtd_slots) { return }
-  
+
   var ano_atual = new Date().getFullYear()
   var ano_inicio = oss_slot_anoinicio.getValue()    
   var anos_usados = ano_atual-ano_inicio+1 
   var qtd_rows = anos_usados*12
-  
+
   if(anos_usados > 10) {
     var ui = SpreadsheetApp.getUi(); 
     var result = ui.alert(
@@ -902,31 +902,31 @@ function transfereoutros_v4x(oss_outros, tss_outros) {
       return;
     }    
   }    
-  
+
   tss_outros.getRange('OUTROS_ANO_INICIO').setValue(ano_inicio)
-  
+
   var oss_slot_tipo_row = oss_slot_tipo.getRow() 
   var oss_slot_tipo_col = oss_slot_tipo.getColumn()
-  
+
   var oss_slot_aporte_row = oss_slot_aporte.getRow() 
   var oss_slot_aporte_col = oss_slot_aporte.getColumn()
-  
+
   var formulas = tss_outros.getRange('OUTROS_FORMULAS')
   var slot1_formulas = formulas.getFormulas()
-  
+
   var aporte, vm
-  
+
   for(var i=0 ; i<qtd_slots ; i++){
     var dados = oss_outros.getRange(oss_slot_tipo_row, oss_slot_tipo_col-2 + i*8, 5, 8).getValues()
     tss_outros.getRange(oss_slot_tipo_row, oss_slot_tipo_col-2 + i*8, 5, 8).setValues(dados)
-    
+
     var range_aux = tss_outros.getRange(oss_slot_tipo_row +4, oss_slot_tipo_col + (i*8)+4, 1, 2)
     if(i==0) { formulas.setFormulas(slot1_formulas) } 
     else { formulas.copyTo(range_aux, {contentsOnly: false}) }
-    
+
     var dados = oss_outros.getRange(oss_slot_aporte_row, oss_slot_aporte_col + i*8, qtd_rows, 2).getValues()
     var slot_formulas = oss_outros.getRange(oss_slot_aporte_row, oss_slot_aporte_col + i*8, qtd_rows, 2).getFormulas() 
-    
+
     var data=[]      
     for(var j=0 ; j< slot_formulas.length ; j++) {      
       if(slot_formulas[j][0]){ aporte = slot_formulas[j][0] } else { aporte = dados[j][0]}
@@ -939,21 +939,21 @@ function transfereoutros_v4x(oss_outros, tss_outros) {
 function transfereoutros_v31(oss_outros, tss_outros){     
   var oss_slot_anoinicio = oss_outros.getRange('B2')  
   var oss_slot_count = oss_outros.getRange('B4') 
-  
+
   var oss_slot_tipo = oss_outros.getRange('AI1')
   var oss_slot_aporte = oss_outros.getRange('AI10')   
-  
+
   var tss_slot_tipo = tss_outros.getRange('OUTROS_SLOT1_TIPO')
   var tss_slot_aporte = tss_outros.getRange('OUTROS_SLOT1_APORTE')  
-  
+
   var qtd_slots = oss_slot_count.getValue()-2  
   if(!qtd_slots) { return }
-  
+
   var ano_atual = new Date().getFullYear()
   var ano_inicio = oss_slot_anoinicio.getValue()    
   var anos_usados = ano_atual-ano_inicio+1 
   var qtd_rows = anos_usados*12
-  
+
   if(anos_usados > 10) {
     var ui = SpreadsheetApp.getUi(); 
     var result = ui.alert(
@@ -977,39 +977,39 @@ function transfereoutros_v31(oss_outros, tss_outros){
       return;
     }    
   }     
-  
+
   tss_outros.getRange('OUTROS_ANO_INICIO').setValue(ano_inicio)
-  
+
   var oss_slot_tipo_row = oss_slot_tipo.getRow() 
   var oss_slot_tipo_col = oss_slot_tipo.getColumn()
-  
+
   var oss_slot_aporte_row = oss_slot_aporte.getRow() 
   var oss_slot_aporte_col = oss_slot_aporte.getColumn()
-  
+
   var tss_slot_tipo_row = tss_slot_tipo.getRow()
   var tss_slot_tipo_col = tss_slot_tipo.getColumn()
-  
+
   var tss_slot_aporte_row = tss_slot_aporte.getRow() 
   var tss_slot_aporte_col = tss_slot_aporte.getColumn()
-  
+
   var aporte, vm
-  
+
   for(var i=0 ; i<qtd_slots ; i++){
     var data = []    
     var dados = oss_outros.getRange(oss_slot_tipo_row, oss_slot_tipo_col + i*8, 2, 2).getValues()
-    
+
     var tipo = dados[0][0]
     var index = dados[0][1]
     var emissor = dados[1][0]
     var objetivo = dados[1][0]
-    
+
     data.push([tipo],[emissor],[''],[index],[objetivo])      
-    
+
     tss_outros.getRange(tss_slot_tipo_row, tss_slot_tipo_col + i*8, 5, 1).setValues(data)
-    
+
     var dados = oss_outros.getRange(oss_slot_aporte_row, oss_slot_aporte_col + i*8, qtd_rows, 2).getValues()
     var slot_formulas = oss_outros.getRange(oss_slot_aporte_row, oss_slot_aporte_col + i*8, qtd_rows, 2).getFormulas() 
-    
+
     var data=[]      
     for(var j=0 ; j< slot_formulas.length ; j++) {      
       if(slot_formulas[j][0]){ aporte = slot_formulas[j][0] } else { aporte = dados[j][0]}
@@ -1023,38 +1023,38 @@ function transfereoutros_v31(oss_outros, tss_outros){
 function addOutros(nslots) {
   var tss = SpreadsheetApp.getActiveSpreadsheet();   
   var tss_outros = tss.getSheetByName('Outros');
-  
+
   var tss_row_slot_tipo = tss_outros.getRange('OUTROS_SLOT1_TIPO').getRow();
   var tss_row_slot_subtipo = tss_outros.getRange('OUTROS_SLOT1_SUBTIPO').getRow();
   var tss_row_slot_corretora = tss_outros.getRange('OUTROS_SLOT1_CORRETORA').getRow();
   var tss_row_slot_aporte = tss_outros.getRange('OUTROS_SLOT1_APORTE').getRow();
   var tss_col_slot_aporte = tss_outros.getRange('OUTROS_SLOT1_APORTE').getColumn();
-  
+
   var lCol = tss_outros.getLastColumn();
   var lrow = tss_outros.getLastRow();
-  
+
   var outros_slot_distance = 8;
-  
+
   if(nslots == undefined){ nslots = 1; }
-  
+
   tss_outros.insertColumnsAfter(lCol, outros_slot_distance*nslots);
-  
+
   var range = tss_outros.getRange(tss_row_slot_tipo, tss_col_slot_aporte+outros_slot_distance-1, lrow, outros_slot_distance);
   var range_aux;
-  
+
   for(var i=1; i<=nslots; i++){
     range_aux = tss_outros.getRange(tss_row_slot_tipo, lCol+1, lrow, outros_slot_distance);
     range.copyTo(range_aux, {contentsOnly: false});
-    
+
     tss_outros.setColumnWidth(lCol+1, 20);
     tss_outros.setColumnWidths(lCol+2, 7, 70);
     tss_outros.hideColumns(lCol+4, 3);
-    
+
     tss_outros.getRange(tss_row_slot_tipo,      lCol+3,   5).clearContent(); //Tipo
     tss_outros.getRange(tss_row_slot_subtipo,   lCol+3+5).clearContent().clearDataValidations(); //Subtipo
     tss_outros.getRange(tss_row_slot_corretora, lCol+3+5).clearContent(); //Corretora
     tss_outros.getRange(tss_row_slot_aporte,    lCol+2, lrow-tss_row_slot_aporte, 2).clearContent(); //Aporte/Resgate/Valor de Mercado
-    
+
     lCol+=outros_slot_distance;
   }
 } 
@@ -1068,19 +1068,19 @@ function addYearOutros(nyears) {
   var tss_lcol = tss_outros.getLastColumn();
   var tss_col_slot_aporte = tss_outros.getRange("OUTROS_SLOT1_APORTE").getColumn(); 
   var tss_slot_distance = 8;
-  
+
   if(nyears == undefined){ nyears = 1; }
-  
+
   var range_copy_year_block = tss_outros.getRange(tss_frow_data+12, 2, 12, tss_lcol); //Segundo bloco do Ano
   var range_new_year_block;
-  
+
   tss_outros.insertRowsAfter(tss_lrow, 12*nyears);
-  
+
   range_new_year_block = tss_outros.getRange(tss_lrow+1, 2, 12*nyears);
   range_copy_year_block.copyTo(range_new_year_block, {contentsOnly: false});
-  
+
   tss_outros.getRange(tss_lrow+1, 15, 12*nyears, 15).clearContent();
-  
+
   for (var i=1; i<=tss_outros_nslots; i++){
     tss_outros.getRange(range_new_year_block.getRow(), tss_col_slot_aporte, 12*nyears, 2).clearContent();
     tss_col_slot_aporte+=tss_slot_distance;
@@ -1090,9 +1090,9 @@ function addYearOutros(nyears) {
 function del_last_slot() {
   var tss = SpreadsheetApp.getActiveSpreadsheet();  
   var tss_outros = tss.getSheetByName('Outros');
-  
+
   var lCol = tss_outros.getLastColumn();
-  
+
   //Regra para manter pelo menos 2 Slots
   if(lCol > 49){
     tss_outros.deleteColumns(lCol-7, 8); //Remove Ultimo Slot do Outros
@@ -1105,10 +1105,10 @@ function del_last_slot() {
 function clear_outros(){
   var tss = SpreadsheetApp.getActiveSpreadsheet();
   var tss_outros = tss.getSheetByName('Outros'); 
-  
+
   var outros_count = tss_outros.getRange('OUTROS_SLOT_COUNT').getValue();
   if(!outros_count) {return}  
-  
+
   var tss_outros_lrow = tss_outros.getLastRow();
   var tss_col_slot_tipo = tss_outros.getRange('OUTROS_SLOT1_TIPO').getColumn();
   var tss_row_slot_tipo = tss_outros.getRange('OUTROS_SLOT1_TIPO').getRow();
@@ -1127,9 +1127,9 @@ function clear_outros(){
   var tss_col_slot_aporte = tss_outros.getRange('OUTROS_SLOT1_APORTE').getColumn();
   var tss_row_slot_aporte = tss_outros.getRange('OUTROS_SLOT1_APORTE').getRow();
   var tss_slot_distance = 8;
-  
+
   var outros_name; 
-  
+
   for (var i=1; i<=outros_count; i++){      
     tss_outros.getRange(tss_row_slot_tipo, tss_col_slot_tipo, 1, 1).clearContent(); //Tipo
     tss_outros.getRange(tss_row_slot_subtipo, tss_col_slot_subtipo, 1, 1).clearContent().clearDataValidations(); //Subtipo
@@ -1138,9 +1138,9 @@ function clear_outros(){
     tss_outros.getRange(tss_row_slot_indexador, tss_col_slot_indexador, 1, 1).clearContent(); //Indexador
     tss_outros.getRange(tss_row_slot_objetivo, tss_col_slot_objetivo, 1, 1).clearContent(); //Objetivo
     tss_outros.getRange(tss_row_slot_corretora, tss_col_slot_corretora, 1, 1).clearContent(); //Corretora
-    
+
     tss_outros.getRange(tss_row_slot_aporte, tss_col_slot_aporte, tss_outros_lrow-tss_row_slot_aporte, 2).clearContent(); //Aporte/Resgate/Valor de Mercado
-    
+
     tss_col_slot_tipo+=tss_slot_distance;
     tss_col_slot_subtipo+=tss_slot_distance;
     tss_col_slot_emissor+=tss_slot_distance;
@@ -1156,32 +1156,32 @@ function carregar_validacao() {
   var tss = SpreadsheetApp.getActiveSpreadsheet();
   var activeSheet = tss.getActiveSheet();  
   var activeSheetName = activeSheet.getSheetName();
-  
+
   if(activeSheetName!="Outros"){ return }
-  
+
   var activeCell = activeSheet.getActiveCell();
   var activeColumn = activeCell.getColumn();
   var activeRow = activeCell.getRow();  
-  
+
   var tss_outros = tss.getSheetByName('Outros');
   var firstColTipo = tss_outros.getRange('OUTROS_SLOT1_TIPO').getColumn();
   var firstRowTipo = tss_outros.getRange('OUTROS_SLOT1_TIPO').getRow();
   var distanceColsNextTipo = 8;
   var distanceColsSubtipo  = 5;
-  
+
   if(activeRow==firstRowTipo && 
      activeColumn>=firstColTipo && 
      ((activeColumn-firstColTipo)%distanceColsNextTipo)==0)
   {
     activeCell.offset(0, distanceColsSubtipo).clearContent().clearDataValidations();
-    
+
     var tss_parameters = tss.getSheetByName("Parameters"); 
     var tipos = tss_parameters.getRange(1, 1, 1, 3).getValues();
     var tipoIndex = tipos[0].indexOf(activeCell.getValue()) + 1;
-    
+
     if(tipoIndex != 0){
       var validationRange = tss_parameters.getRange(2, tipoIndex, tss_parameters.getLastRow() - 1);
-      
+
       var validationRule = SpreadsheetApp.newDataValidation().requireValueInRange(validationRange).build();
       activeCell.offset(0, distanceColsSubtipo).setDataValidation(validationRule);      
     } 
@@ -1194,13 +1194,13 @@ function carregar_validacao() {
 function calc_operacoes() {
   var tss = SpreadsheetApp.getActiveSpreadsheet()
   var tss_setor = tss.getSheetByName("Setor")
-  
+
   var range = tss_setor.getRange("setor_ativos")  
   var range_row = range.getRow()
   var range_col = range.getColumn()
   var lr = tss_setor.getLastRow()
   var data = tss_setor.getRange(range_row,range_col,lr,1).getValues()
-  
+
   //DADOS ATIVOS
   var ativos = []
   for(var i=0; i<data.length; i++) {
@@ -1208,24 +1208,24 @@ function calc_operacoes() {
     else if(!data[i][0] && i!=0){break}
   }  
   var ativos_text = ativos.toString().replace(new RegExp(' ', 'g'),'').replace(new RegExp('\n', 'g'),'')
-  
+
   var url = sistema()+"ativos.php?key=196132&sigla4="+ativos_text;
   try{var result = ImportJSON(url)} catch(error){server_busy(); return;
                                                 }  
   tss_setor.getRange(1,range_col+1,lr,16 ).clearContent()
   tss_setor.getRange(1,range_col+1,result.length,result[0].length).setValues(result);
   Utilities.sleep(2000)
-  
+
   calc_cotacao(tss,tss_setor);
 }
 
 function calc_cotacao(tss,tss_setor){
   var tss = SpreadsheetApp.getActiveSpreadsheet() 
   var tss_setor = tss.getSheetByName("Setor") 
-  
+
   var tss_cotacao = tss.getSheetByName("Cotação")   
   var ativos = tss_cotacao.getRange('A5:E').getValues()
-  
+
   //COTACAO SERVIDOR DLOMBELLO
   var codigos = []
   for(var i=0; i<ativos.length; i++) {
@@ -1233,24 +1233,24 @@ function calc_cotacao(tss,tss_setor){
     else if(!ativos[i][0]){break}
   }    
   var codigos_text = codigos.toString().replace(new RegExp(' ', 'g'),'').replace(new RegExp('\n', 'g'),'')  
-  
+
   var url2 = sistema()+"cotacao.php?key=196132&sigla="+codigos_text;
   //Logger.log(url2)
   try{var cotacoes = ImportJSON(url2)} catch(error){server_busy(); return;} 
   //var cotacoes = ImportJSON(url2)  
   Logger.log(cotacoes)
-  
+
   var cotacao = []
   for(var i=1; i<cotacoes.length; i++){
     if(parseFloat(cotacoes[i][1])){
       cotacao.push([cotacoes[i][0],parseFloat(cotacoes[i][1]),parseFloat(cotacoes[i][2]),parseFloat(cotacoes[i][3])])  
     }
   } 
- 
+
   tss_setor.getRange('A7:D').clearContent()
   tss_setor.getRange(7,1,cotacao.length,cotacao[0].length).setValues(cotacao)
   Utilities.sleep(2000)
-  
+
   //COTACAO OPCOES SERVIDOR ALTERNATIVO
   var ativos = tss_cotacao.getRange('A5:E').getValues()  
   var result_opcao = []
@@ -1261,7 +1261,7 @@ function calc_cotacao(tss,tss_setor){
       result_opcao.push([ativos[i][0],cot[0],cot[1],cot[2]])
     }
   }
-  
+
   if(result_opcao.length){
     cotacao = cotacao.concat(result_opcao)
     tss_setor.getRange(7,1,cotacao.length,cotacao[0].length).setValues(cotacao)
@@ -1275,27 +1275,27 @@ function opcoes_net(ativo){
     var url = "https://opcoes.net.br/"+ativo
     var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true})
     var response = response.getBlob().getDataAsString('UTF-8') 
-    
+
     var ini = response.indexOf('<tbody>') + ('<tbody>').length;
     var end = response.indexOf('</tbody>',ini)  
     var table = "<table>"+(response.substring(ini,end))+"</table>"
-    
+
     var xml_table = XmlService.parse(table);      
     var xml_items = xml_table.getRootElement().getChildren('tr');
-    
+
     var price = 0
     var change = 0
     var changepct = 0
     var cot_hoje = 0
     var cot_anterior = 0  
-    
+
     try{cot_hoje = parseFloat(xml_items[0].getChildren('td')[4].getValue().replace(".","").replace(",","."))}catch(error){cot_hoje = 0}
     try{cot_anterior = parseFloat(xml_items[1].getChildren('td')[4].getValue().replace(".","").replace(",","."))}catch(error){cot_anterior = 0}
-    
+
     price = Math.round(cot_hoje*100)/100 
     change = Math.round((cot_hoje - cot_anterior)*100)/100  
     changepct = Math.round(((cot_hoje / cot_anterior -1)*100)*100)/100  
-    
+
     //Logger.log([price,change,changepct])
     return [price,change,changepct]
   }catch(error){
@@ -1313,24 +1313,24 @@ function calc_historico() {
   var qtd_ativos_outros = tss_historico.getRange(1,9).getValue();
   var ui = SpreadsheetApp.getUi(); 
   var result = [];     
-  
+
   if(qtd_ativos > 0) {  
     var tss_dados = tss.getSheetByName('Dados'); 
     if(tss_dados.getRange("O2").getValue()) {
       ui.alert('Desabilite o "PM POR CORRETORA" na aba DADOS e aguarde 30 segundos antes de executar esse script! \n\n Após termino do script poderá habilitar novamente');
       return;
     }
-    
+
     var ativos = tss_historico.getRange(2,5,qtd_ativos,4).getValues();
     var cod_ativos = tss_historico.getRange(2,5,qtd_ativos,1).getValues();
     cod_ativos = cod_ativos.toString().replace(new RegExp(' ', 'g'),'').replace(new RegExp('\n', 'g'),'');
     var data_ini = ativos[0][1]
-    
+
     var ano = (data_ini.getFullYear())+""
     var mes = (data_ini.getMonth()+1)+"" ;  if(mes.length==1) {mes = "0"+mes} 
     var dia = (data_ini.getDate())+""    ;  if(dia.length==1) {dia = "0"+dia}             
     var data_ini = ano+mes+dia+""
-    
+
     try {
       var ativos_JSON = UrlFetchApp.fetch(sistema()+"history.php?key=196132&sigla="+cod_ativos+"&data_maior="+data_ini).getContentText();
     } catch (error) {
@@ -1340,29 +1340,29 @@ function calc_historico() {
     var cotacao_JSON = JSON.parse(ativos_JSON)
     var cotacao_found = cotacao_JSON["found"]
     var cotacao_not_found = cotacao_JSON["not_found"]
-    
+
     var qtd_dados = tss_dados.getRange(4,1).getValue();
     var dados = tss_dados.getRange(7,1,qtd_dados-6,15).getValues();     
-    
+
     var indice, data, hoje, amanha, date, historico_full, fonte; 
     var inicio, fim, classe, bovespa, custodia, data_aux, dateGMT;
-    
+
     for (var i=0 ; i < qtd_ativos ; i++) {   
       try{
         classe = ativos[i][3];      
         if(classe.trim() == '') {continue;}
-        
+
         inicio = date_GMT(ativos[i][1]); 
         fim    = ativos[i][2] || new Date();
         fim    = date_GMT(fim)            
-        
+
         var tipo_classe = "3,4,5,6,7,8,11,33,34,35"
         tipo_classe = tipo_classe.split(",")
         var ativo_num = ativos[i][0].substring(4,5)+ativos[i][0].substring(5,6)        
-        
+
         var nacional = false;
         var subscricao = false;        
-        
+
         for(var p=0; p<tipo_classe.length; p++){
           if(classe=="AÇÃO"||classe=="FII"||classe=="ETF"||classe=="BDR"||classe=="FIA"||classe=="FIP"||classe=="FIP IE"){
             nacional = true;
@@ -1373,7 +1373,7 @@ function calc_historico() {
             }
           }
         }
-        
+
         if(classe == 'OPÇÃO' || (nacional && subscricao)){  
           var data_fim_mes = new Date(inicio.getFullYear(), inicio.getMonth()+1, 0); 
           while (data_fim_mes <= fim){ 
@@ -1387,10 +1387,10 @@ function calc_historico() {
           }        
           continue;
         }
-        
+
         var mFutJSON = { "WIN": 0.2, "IND": 1, "WDO": 10, "DOL": 50 };
         var fator_fut = mFutJSON[ativos[i][0].substring(0,3).toUpperCase()]  
-        
+
         if(mFutJSON[ativos[i][0].substring(0,3).toUpperCase()]){  
           var data_fim_mes = new Date(inicio.getFullYear(), inicio.getMonth()+1, 0);
           while (data_fim_mes <= fim){
@@ -1404,15 +1404,15 @@ function calc_historico() {
           }        
           continue;
         }
-        
+
         if(cotacao_not_found[i]){
           ui.alert('Histórico de cotações de ('+cotacao_not_found[i]+') não encontrado! =( \n Para solicitar cadastro, envie email para: \n dlombelloplanilhas@gmail.com'); 
           continue;
         }
-        
+
         var cotacao_ativo = cotacao_found[ativos[i][0].trim().toUpperCase()]        
         var data_fim_mes = new Date(inicio.getFullYear(), inicio.getMonth()+1, 0);       
-        
+
         while (data_fim_mes <= fim){ 
           custodia = CUSTODIA_CALC(ativos[i][0],data_fim_mes,dados); if(custodia == false){return}
           var cotacao_mes = 0
@@ -1422,12 +1422,12 @@ function calc_historico() {
             var dia = (data_fim_mes.getDate())+""    ;  if(dia.length==1) {dia = "0"+dia}             
             var data_aux = parseInt(ano+mes+dia+"")
             var data_cotacao = parseInt(cotacao_ativo[j][1])
-            
+
             if(data_cotacao<=data_aux ){
               cotacao_mes =  parseFloat(cotacao_ativo[j][2]);        
             } else {break}       
           }
-          
+
           data = [ativos[i][0],classe,dia+'/'+mes+'/'+ano,custodia[0],custodia[1],cotacao_mes,custodia[2]]; 
           if(custodia[0] != 0 || custodia[2] !=0 ) { result.push(data) }          
           data_fim_mes = new Date(data_fim_mes.getFullYear(), data_fim_mes.getMonth()+2, 0);
@@ -1448,7 +1448,7 @@ function calc_historico() {
   import_benchmark()
   try{ taxasIndices() }catch(error){}
   try{ import_fundamentus() }catch(error){}
-  
+
 }  
 function CUSTODIA_CALC(ativo,data,dados) {
   var dia, dia_inicio
@@ -1463,11 +1463,11 @@ function CUSTODIA_CALC(ativo,data,dados) {
       dia_inicio = (dia).toString().split(' ')
       dia_inicio = new Date(dia_inicio[3]+'/'+dia_inicio[1]+'/01')
     }
-    
+
     var custodia = 0
     var pm = 0
     var trade = 0
-    
+
     for ( var i = 0 ; i < dados.length; i++) {        
       if(ativo == dados[i][0].toUpperCase().trim() && dia >= date_GMT(dados[i][1])) {
         custodia = dados[i][13]
@@ -1477,7 +1477,7 @@ function CUSTODIA_CALC(ativo,data,dados) {
         }
       }   
     }
-    
+
   } catch(error){
     var ui = SpreadsheetApp.getUi();
     ui.alert('Erro ao calcular operações! Ativo: '+ativo+'| Mês:'+data+'. Verifique os preenchimentos do código do ativo na aba dados!'); 
@@ -1488,49 +1488,49 @@ function CUSTODIA_CALC(ativo,data,dados) {
 //CALCULO DO HISTORICO DA ABA OUTROS
 function OUTROS_HISTORICO(tss,tss_historico,qtd_ativos_outros) {  
   var ativos = tss_historico.getRange(2,9,qtd_ativos_outros,4).getValues();
-  
+
   var tss_outros = tss.getSheetByName('Outros');
   var qtd_outros = tss_outros.getRange('OUTROS_SLOT_COUNT').getValue();
   var outros_slot_distance = 8;
-  
+
   var outros_slot1_aport_range = tss_outros.getRange('OUTROS_SLOT1_APORTE');
-  
+
   var outros_dados = tss_outros.getRange(outros_slot1_aport_range.getRow(), 
                                          outros_slot1_aport_range.getColumn()-1, 
                                          tss_outros.getLastRow()-outros_slot1_aport_range.getRow(), 
     tss_outros.getLastColumn()-outros_slot1_aport_range.getColumn()
     ).getValues();
-  
+
   var outros_meses_inicio_range = tss_outros.getRange('OUTROS_MESES_INICIO');
   var outros_meses = tss_outros.getRange(outros_meses_inicio_range.getRow(), outros_meses_inicio_range.getColumn(), tss_outros.getLastRow()-outros_meses_inicio_range.getRow()).getValues();
-  
+
   var outros_nslot;
-  
+
   var data, classe, cotas, trades, vlrmerc
   var result = []
-  
+
   for(var i=0; i<qtd_ativos_outros; i++){
     classe = ativos[i][3]
     outros_nslot = ativos[i][0].split("-")[0];  
-    
+
     for(var j=0; j<outros_dados.length; j++){
-      
+
       var pm_pos = ((outros_nslot*outros_slot_distance)-outros_slot_distance);
       var aport_pos = ((outros_nslot*outros_slot_distance)-outros_slot_distance)+1;
       var vmerc_pos = ((outros_nslot*outros_slot_distance)-outros_slot_distance)+2;
       var cotas_pos = ((outros_nslot*outros_slot_distance)-outros_slot_distance)+4;      
-      
+
       if(outros_dados[j][pm_pos]>0){    
-        
+
         if(outros_dados[j][cotas_pos] > 0) { cotas = outros_dados[j][cotas_pos] } else { cotas = 0 }
         if(outros_dados[j][vmerc_pos] != false) { vlrmerc = outros_dados[j][vmerc_pos] } else { vlrmerc = 0 }   
-        
+
         if(outros_dados[j][aport_pos] < 0) { 
           trades = (outros_dados[j][aport_pos]*-1)+(((outros_dados[j][cotas_pos])-(outros_dados[j-1][cotas_pos]))*(outros_dados[j][pm_pos]))
         } else { 
           trades = 0 
         }
-        
+
         data = [ ativos[i][0], classe, outros_meses[j][0], cotas, outros_dados[j][pm_pos], vlrmerc, trades ];
         result.push(data);   
       }
@@ -1563,10 +1563,10 @@ function debugar_ordenar_op(tss){
   } else { 
     var sortBy = "data";
   }  
-  
+
   var new_table_dados = []
   var new_table_dayTrade = []
-  
+
   //monta tabela de operacoes normais
   var tss_dados = tss.getSheetByName("Dados");
   var lr_dados = tss_dados.getRange('A4').getValue();  
@@ -1607,7 +1607,7 @@ function debugSortOperacoes(table,sortBy,aba) {
   var ui = SpreadsheetApp.getUi();
   var new_table =[]
   var ativo,data,tipoOp,qtd,preco,taxa,corretora,irrf
-  
+
   for (var i=0; i<table.length; i++){
     //ativo
     if(table[i][0]){
@@ -1617,7 +1617,7 @@ function debugSortOperacoes(table,sortBy,aba) {
       var bvmf = ativo.substring(leng-2,leng-1)  
       if(!isNaN(bvmf) && fracionado == 'F') {ativo = ativo.substring(0,leng-1)}      
     }else{ativo=table[i][0]}
-    
+
     //data
     try {      
       if(table[i][1]){
@@ -1636,12 +1636,12 @@ function debugSortOperacoes(table,sortBy,aba) {
       ui.alert( 'ERRO DATA -> Verifique o valor ('+table[i][1]+') da data da operação cadastrada na linha '+ (7+i) +' da aba: ('+ aba +') ativo: '+ ativo );
       data = table[i][1];
     }
-    
+
     //tipoOp
     if(!table[i][2] && table[i][3]<0 ){tipoOp="V"} 
     else if (!table[i][2] && table[i][3]>0 ){tipoOp="C"}
     else {tipoOp=table[i][2]}
-    
+
     //qtd
     if (table[i][3] == "") {qtd=table[i][3]}
     else if(table[i][3] && !isNaN(table[i][3])){    
@@ -1651,7 +1651,7 @@ function debugSortOperacoes(table,sortBy,aba) {
       ui.alert( 'ERRO QTD -> Verifique o valor ('+table[i][3]+') da qtd digitada na operação cadastrada na linha '+ (7+i) +' da aba: ('+ aba +') ativo: '+ ativo );
       qtd = table[i][3]        
     }
-    
+
     //preco    
     if(table[i][4] == '') {preco = table[i][4]}
     else if(table[i][4] && !isNaN(table[i][4])){preco=parseFloat(table[i][4])} 
@@ -1659,7 +1659,7 @@ function debugSortOperacoes(table,sortBy,aba) {
       ui.alert( 'ERRO preco -> Verifique o valor ('+table[i][4]+') do preço digitado na operação cadastrada na linha '+ (7+i) +' da aba: ('+ aba +') ativo: '+ ativo );
       preco = table[i][4];
     }
-    
+
     //taxa
     if(table[i][5] == '') {taxa = table[i][5]}
     else if(table[i][5] && !isNaN(table[i][5])){taxa=parseFloat(table[i][5])} 
@@ -1667,10 +1667,10 @@ function debugSortOperacoes(table,sortBy,aba) {
       ui.alert( 'ERRO taxa -> Verifique o valor ('+table[i][5]+') da taxa digitado na operação cadastrada na linha '+ (7+i) +' da aba: ('+ aba +') ativo: '+ ativo );
       taxa = table[i][5];
     }
-    
+
     //corretora
     if(table[i][6]){corretora=table[i][6].toString().trim().toUpperCase()} else {corretora=table[i][6]}
-    
+
     //irrf
     if(table[i][7] == '') {irrf=table[i][7]}
     else if(table[i][7] && !isNaN(table[i][7])){irrf=parseFloat(table[i][7])} 
@@ -1678,10 +1678,10 @@ function debugSortOperacoes(table,sortBy,aba) {
       ui.alert( 'ERRO irrf -> Verifique o valor ('+table[i][7]+') do irrf digitado na operação cadastrada na linha '+ (7+i) +' da aba: ('+ aba +') ativo: '+ ativo );
       irrf = table[i][7];
     }
-    
+
     if(ativo&&data){new_table.push([ativo,data,tipoOp,qtd,preco,taxa,corretora,irrf])}    
   }
-  
+
   new_table = new_table.sort(function(a,b) {  
     try{
       var o1 = date_GMT (a[1]);
@@ -1691,7 +1691,7 @@ function debugSortOperacoes(table,sortBy,aba) {
     } catch(error){}
     return 0;
   }); 
-  
+
   if(!sortBy) {sortBy = "data"}
   if(sortBy.toLowerCase().trim() == "ativo"){
     new_table = new_table.sort(function(a,b) {    
@@ -1702,7 +1702,7 @@ function debugSortOperacoes(table,sortBy,aba) {
       return 0;
     });     
   }
-  
+
   //Logger.log(new_table)
   return new_table;
 }
@@ -1711,37 +1711,37 @@ function organizar_proventos(tss,proventos){
   if(!tss){var tss = SpreadsheetApp.getActiveSpreadsheet(); }
   var tss_parameters = tss.getSheetByName('Parameters');
   var tss_proventos = tss.getSheetByName('Proventos'); 
-  
+
   var formula1 = '=ARRAYFORMULA(IF(LEN(T7:T);T7:T;INDIRECT(D4)))'
   tss_proventos.getRange('D7').setValue(formula1)
-  
+
   var qtd_dados = tss_parameters.getRange(1,7).getValue()  
   var proventos_qtdRow = tss_proventos.getRange('PROVENTOS_LROW').getValue()-6
-  
+
   if(!proventos && proventos_qtdRow>0){ var proventos = tss_proventos.getRange(7,1,proventos_qtdRow,4).getValues() }
-  
+
   var formula2 = '=ARRAYFORMULA(IF((C7:C="AMORTIZACAO")+IF(E1=TRUE;0;(B7:B>HOJE));"";IF(LEN(T7:T);T7:T;INDIRECT(D4))))'
   tss_proventos.getRange('D7').setValue(formula2)
-  
+
   if(qtd_dados) {    
     var dados = tss_parameters.getRange(2,7,qtd_dados,10).getValues()      
-    
+
     for(var j=0 ; j<dados.length ; j++) {      
       try{
         var evento = dados[j][2] 
         if(evento == 'BN') {evento = 'BONIFICACAO'}
         else if(evento == 'AM') {evento = 'AMORTIZACAO'}    
-        
+
         var existe = false
         for(var i=0 ; i<proventos.length ; i++) {      
           if(dados[j][0]==proventos[i][0] && 
              date_GMT(dados[j][1]).toString()==date_GMT(proventos[i][1]).toString() &&
             evento == proventos[i][2]) { existe = true; break }       
         }
-        
+
         if (existe==false && evento=='BONIFICACAO') {proventos.push([dados[j][0],datet_text(dados[j][1],"dd/MM/yyyy"),evento,dados[j][8]])}
         else if (existe==false && evento=='AMORTIZACAO') {proventos.push([dados[j][0],datet_text(dados[j][1],"dd/MM/yyyy"),evento,dados[j][4]*-1])}  
-        
+
       } catch(error){
         var ui = SpreadsheetApp.getUi();
         ui.alert('Erro ao organizar operações! Ativo: '+dados[j][0]+'. Verifique os preenchimentos do ativo nas abas dados e proventos!'); 
@@ -1749,13 +1749,13 @@ function organizar_proventos(tss,proventos){
       }         
     }
   }
-  
+
   if(!proventos) { return } 
   var prov_man_row = tss_proventos.getRange('PROVENTOS_MANUAL_DADOS').getRow()
   var prov_man_col = tss_proventos.getRange('PROVENTOS_MANUAL_DADOS').getColumn()
-  
+
   var proventos_sort= tss_proventos.getRange('PROVENTOS_SORT').getValue()
-  
+
   if(proventos_sort == 'Ativo') { 
     proventos = proventos.sort(function(a,b) {    
       var o1 = a[0].toUpperCase();
@@ -1783,22 +1783,22 @@ function transf_corretagem_dados(){
   var tss = SpreadsheetApp.getActiveSpreadsheet();
   var tss_corretagem = tss.getSheetByName('Corretagem');
   var tss_dados = tss.getSheetByName('Dados');
-  
+
   var range_corretagem_ini = tss_corretagem.getRange('CORRETAGEM_INICIO');
   var range_dados_ini = tss_dados.getRange('DADOS_INICIO');
-  
+
   var lastNonBlankColBrow = tss_dados.getRange('DADOS_LROW').getValue();  
   if(lastNonBlankColBrow < 7) {lastNonBlankColBrow = 6}
-  
+
   var lastNonBlankColBrow_2 = 0;
   for (var i=1, lenRows=tss_corretagem.getRange("K:K").getNumRows(); i<=lenRows; i++) {
     if ( !tss_corretagem.getRange(i, 11).isBlank() ) { 
       lastNonBlankColBrow_2 = i;
     }
   }
-  
+
   var qtd_row = lastNonBlankColBrow_2 - range_corretagem_ini.getRow() +1;
-  
+
   var range_corretagem = tss_corretagem.getRange(range_corretagem_ini.getRow(), range_corretagem_ini.getColumn(), qtd_row, 7);
   var range_dados = tss_dados.getRange(lastNonBlankColBrow+1, range_dados_ini.getColumn(), qtd_row, 7); 
   range_corretagem.copyTo(range_dados, {contentsOnly: true});  
@@ -1813,29 +1813,29 @@ function atualiza_alocacao(){
   var result = ui.alert(
     'Atualizar Alocação! Deseja continuar?',
     ui.ButtonSet.YES_NO);
-  
+
   if (result != ui.Button.YES) { return }
   var tss = SpreadsheetApp.getActiveSpreadsheet();
   var tss_alocacao = tss.getSheetByName('Alocação');
   var tss_carteira = tss.getSheetByName('Carteira'); 
-  
+
   var tss_alocacao_lrow = tss_alocacao.getLastRow();    
   var tss_carteira_lrow = tss_carteira.getLastRow();    
-  
+
   var carteira_dados =  tss_carteira.getRange(11,27,tss_carteira_lrow,24).getValues()
-  
+
   var acao_range = [11,2,tss_alocacao_lrow,4]
   var fii_range = [11,10,tss_alocacao_lrow,4]
   var outros_range = [11,18,tss_alocacao_lrow,4]
   var inter_range = [11,27,tss_alocacao_lrow,4]
-  
+
   var alocacao_acao = tss_alocacao.getRange(acao_range[0],acao_range[1],acao_range[2],acao_range[3]).getValues()
   var alocacao_fii = tss_alocacao.getRange(fii_range[0],fii_range[1],fii_range[2],fii_range[3]).getValues()
   var alocacao_outros = tss_alocacao.getRange(outros_range[0],outros_range[1],outros_range[2],outros_range[3]).getValues()
   var alocacao_inter = tss_alocacao.getRange(inter_range[0],inter_range[1],inter_range[2],inter_range[3]).getValues()  
-  
+
   clear_alocacao()
-  
+
   var acoes = []
   var acoes_percent = []
   var fii = []
@@ -1844,9 +1844,9 @@ function atualiza_alocacao(){
   var inter_percent = []
   var outros = []
   var outros_percent = []
-  
+
   for( var i = 0 ; i < carteira_dados.length ; i++) {
-    
+
     if(carteira_dados[i][0] && (
        carteira_dados[i][21] == 'AÇÃO' ||
        carteira_dados[i][21] == 'ETF' ||
@@ -1860,13 +1860,13 @@ function atualiza_alocacao(){
       acoes.push([carteira_dados[i][0]])
       acoes_percent.push([prucrar_alocacao(carteira_dados[i][0],alocacao_acao)])      
     }
-    
+
     else if(carteira_dados[i][0] && carteira_dados[i][21] == 'FII' ) 
     { 
       fii.push([carteira_dados[i][0]]) 
       fii_percent.push([prucrar_alocacao(carteira_dados[i][0],alocacao_fii)])  
     }
-    
+
     else if(carteira_dados[i][0] && (
             carteira_dados[i][21] == 'BDR' ||
             carteira_dados[i][21] == 'STOCK' ||
@@ -1878,14 +1878,14 @@ function atualiza_alocacao(){
       inter.push([carteira_dados[i][0]])
       inter_percent.push([prucrar_alocacao(carteira_dados[i][0],alocacao_inter)])  
     }
-    
+
     else if(carteira_dados[i][0])        
     { 
       outros.push([carteira_dados[i][0]])
       outros_percent.push([prucrar_alocacao(carteira_dados[i][0],alocacao_outros)])  
     }      
   }
-  
+
   for( var j = 0 ; j < alocacao_acao.length ; j++) {      
     var aux = prucrar_ativo(alocacao_acao[j][0],acoes)
     if(!aux && alocacao_acao[j][0]!='') { 
@@ -1914,16 +1914,16 @@ function atualiza_alocacao(){
       inter_percent.push([alocacao_inter[j][3]])
     }      
   }    
-  
+
   if(acoes[0]) { tss_alocacao.getRange(acao_range[0],acao_range[1],acoes.length,1).setValues(acoes) }
   if(acoes_percent[0]) { tss_alocacao.getRange(acao_range[0],acao_range[1]+3,acoes.length,1).setValues(acoes_percent) }    
-  
+
   if(fii[0]) { tss_alocacao.getRange(fii_range[0],fii_range[1],fii.length,1).setValues(fii) }
   if(fii_percent[0]) { tss_alocacao.getRange(fii_range[0],fii_range[1]+3,fii.length,1).setValues(fii_percent) }
-  
+
   if(outros[0]) { tss_alocacao.getRange(outros_range[0],outros_range[1],outros.length,1).setValues(outros) }
   if(outros_percent[0]) { tss_alocacao.getRange(outros_range[0],outros_range[1]+3,outros.length,1).setValues(outros_percent) }
-  
+
   if(inter[0]) { tss_alocacao.getRange(inter_range[0],inter_range[1],inter.length,1).setValues(inter) }
   if(inter_percent[0]) { tss_alocacao.getRange(inter_range[0],inter_range[1]+3,inter.length,1).setValues(inter_percent) }      
 }
@@ -1944,23 +1944,23 @@ function prucrar_alocacao(ativo,dados){
 function clear_alocacao(all){
   var tss = SpreadsheetApp.getActiveSpreadsheet();
   var tss_alocacao = tss.getSheetByName('Alocação'); 
-  
+
   var acao_range = [11,2,50,4]
   var fii_range = [11,10,50,4]
   var outros_range = [11,18,50,4]
   var inter_range = [11,27,50,4]
-  
+
   if(all=='all') {tss_alocacao.getRange(3,4,4,1).clearContent()}
-  
+
   tss_alocacao.getRange(acao_range[0],acao_range[1],acao_range[2],1).clearContent()
   tss_alocacao.getRange(acao_range[0],acao_range[1]+3,acao_range[2],1).clearContent() 
-  
+
   tss_alocacao.getRange(fii_range[0],fii_range[1],fii_range[2],1).clearContent()
   tss_alocacao.getRange(fii_range[0],fii_range[1]+3,fii_range[2],1).clearContent()    
-  
+
   tss_alocacao.getRange(outros_range[0],outros_range[1],outros_range[2],1).clearContent()
   tss_alocacao.getRange(outros_range[0],outros_range[1]+3,outros_range[2],1).clearContent()    
-  
+
   tss_alocacao.getRange(inter_range[0],inter_range[1],inter_range[2],1).clearContent()
   tss_alocacao.getRange(inter_range[0],inter_range[1]+3,inter_range[2],1).clearContent()
 }
@@ -1972,15 +1972,15 @@ function calc_beta(){
   var tss = SpreadsheetApp.getActiveSpreadsheet(); //Planilha de destino
   var tss_beta = tss.getSheetByName('BETA');
   var repetir = tss_beta.getRange(1,2).getValue();
-  
+
   if (repetir > 0) {     
     tss_beta.getRange("K1").setValue("IBOV");    
-    
+
     for (var i=1; i<=repetir; i++){      
       tss_beta.getRange("H3:H12").clearContent();
       var acoes = tss_beta.getRange(i*10-8, 1, 10, 1).getValues();
       tss_beta.getRange(3, 8, 10, 1).setValues(acoes);
-      
+
       var aux = 1;
       var beta = tss_beta.getRange(1,9).getValue();    
       while(beta == "#N/D" || beta == 0 ) {
@@ -1998,14 +1998,14 @@ function calc_beta(){
   }  
   var repetir = tss_beta.getRange(1,4).getValue(); // Col4 Fii
   tss_beta.getRange("H3:H12").clearContent(); 
-  
+
   if (repetir > 0) {     
     tss_beta.getRange("K1").setValue("IFIX");    
-    
+
     for (var i=1; i<=repetir; i++){      
       var acoes = tss_beta.getRange(i*10-8, 3, 10, 1).getValues(); //Col3 Fii
       tss_beta.getRange(3, 8, 10, 1).setValues(acoes);
-      
+
       var aux = 1;
       var beta = tss_beta.getRange(1,9).getValue();    
       while(beta == "#N/D" || beta == 0 ) {
@@ -2016,7 +2016,7 @@ function calc_beta(){
           beta = 1; 
         }       
       }
-      
+
       var beta2 = tss_beta.getRange(3, 9, 10, 1);
       var beta3 = tss_beta.getRange(i*10-8, 4, 10, 1); //Col4 Fii
       beta2.copyTo(beta3, {contentsOnly : true});
@@ -2034,25 +2034,25 @@ function import_benchmark(){import_fundamentus()}
 function import_fundamentus() {
   var data = UrlFetchApp.fetch(sistema()+"fundamentos/fundamentos.txt").getContentText();  
   data = JSON.parse(data)  
-  
+
   var tss = SpreadsheetApp.getActiveSpreadsheet();    
   //IMPORTA FUNDAMENTUS
   var tss_aba = tss.getSheetByName('Fundamentus');
   var fundamentus = data['fundamentus'];    
   var fundamentus = fundamentus_repair(fundamentus)
   tss_aba.getRange(1, 2, fundamentus.length,fundamentus[0].length).setValues(fundamentus); 
-  
+
   //IMPORTA FUNDSEXPLORER
   var tss_aba = tss.getSheetByName('FundsExplorer');
   var fundsexplorer = data['fundsexplorer'];  
   var fundsexplorer = fundamentus_repair(fundsexplorer)
   tss_aba.getRange(1, 3, fundsexplorer.length,fundsexplorer[0].length).setValues(fundsexplorer);   
-  
+
   //IMPORTA TAXAS E INDICES ECONOMICOS
   var taxasindices = data['taxasindices'];
   var tss_aba = tss.getSheetByName("carteira")
   tss_aba.getRange(2,16,taxasindices.length,taxasindices[0].length).setValues(taxasindices)
-  
+
   //IMPORTA BENCHMARK (IBOV,IFIX,CDI,IPCA)
   var benchmark = data['benchmark'];
   var tss_aba = tss.getSheetByName('Setor');
@@ -2105,22 +2105,22 @@ function send_mail(email,subject,resposta){
 function add_x_linhas(copias,sh_name,atualizar_aba){
   if(!copias) {var copias = qtdRows();}
   if(!copias) {return}
-  
+
   var sh = SpreadsheetApp.getActiveSheet();
   if(!sh_name){    
     var sh_name = sh.getSheetName();
   }
-  
+
   if(sh_name == "Dados" || sh_name =="DayTrade" || sh_name =="Proventos"){
     var lRow = sh.getLastRow(); 
     var lCol = sh.getLastColumn();
     var range = sh.getRange(lRow, 1, 1, lCol);
-    
+
     sh.insertRowsAfter(lRow, copias)    
     var range = sh.getRange(7, 1, copias, lCol);
     var range2 = sh.getRange(lRow+1, 1, copias, lCol); 
     range.copyTo(range2, {contentsOnly: false}); 
-    
+
     if((sh_name == "Dados" || sh_name =="DayTrade") && !atualizar_aba) {sh.getRange(lRow+1, 1, copias, 8).clearContent();}
     if(sh_name == "Proventos") {sh.getRange(lRow+1, 1, copias, 20).clearContent();} 
   } 
@@ -2128,9 +2128,9 @@ function add_x_linhas(copias,sh_name,atualizar_aba){
     var lRow = sh.getLastRow(); 
     var lCol = 24
     var range = sh.getRange(lRow, 1, 1, lCol);
-    
+
     if(copias>60) { copias = 60 }
-    
+
     sh.insertRowsAfter(lRow, copias)    
     var range = sh.getRange(44, 1, copias, lCol);
     var range2 = sh.getRange(lRow+1, 1, copias, lCol); 
@@ -2140,14 +2140,14 @@ function add_x_linhas(copias,sh_name,atualizar_aba){
     var lRow = sh.getMaxRows()
     var lCol = sh.getMaxColumns()
     var range = sh.getRange(lRow, 1, 1, lCol);
-    
+
     if(copias>50) { copias = 50 }
-    
+
     sh.insertRowsAfter(lRow, copias)    
     var range = sh.getRange(50, 1, copias, lCol);
     var range2 = sh.getRange(lRow+1, 1, copias, lCol); 
     range.copyTo(range2, {contentsOnly: false});
-    
+
     sh.getRange(lRow+1, 1, copias, lCol).clearContent();
   } else {
     var ui = SpreadsheetApp.getUi();
@@ -2171,20 +2171,20 @@ function qtdRows(){
 function addRow_FluxoCaixa(){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName('FluxoCaixa');
-  
+
   var date = new Date()
-  
+
   var lCol = 24  
   var lRow = sh.getLastRow();   
   var lRow_date = sh.getRange(lRow, 2).getValue()
-  
+
   if(lRow_date && lRow_date<date) {
     var copias = 12  
-    
+
     if (copias > 0 ) {      
       var range = sh.getRange(lRow, 1, 1, lCol);      
       if(copias>60) { copias = 60 }      
-      
+
       sh.insertRowsAfter(lRow, copias)    
       var range = sh.getRange(44, 1, copias, lCol);
       var range2 = sh.getRange(lRow+1, 1, copias, lCol); 
@@ -2229,50 +2229,50 @@ function trigger_active(trigger) {
 //ENVIA EMAIL PARA O USUARIO COM RELTORIO DOS ATIVOS
 function enviaEmail(force){    
   calc_operacoes();  
-  
+
   var tss = SpreadsheetApp.getActiveSpreadsheet()
   var tss_leiame = tss.getSheetByName('LeiaMe')
 
   var diautil = diaUtil();
-  
+
   var valid_email;
   var user_email = tss_leiame.getRange(9,2).getValue() 
-  
+
   if (user_email.indexOf('@') > 0 && user_email.indexOf('.') > 0) { valid_email = true }
   else { valid_email = tss.getOwner().toString() }
-  
+
   if( (valid_email && diautil) || (force=='force' && valid_email) ) { email_Carteira(tss,user_email) }  
 }
 //MONTA O EMAIL A SER ENVIADO COM OS ATIVOS DA CARTEIRA
 function email_Carteira(tss,user_email) {
   Utilities.sleep(5000);
-  
+
   var tss_email = tss.getSheetByName('Email')  
   var dados = tss_email.getRange(1,1,tss_email.getLastRow(), 4).getValues(); 
-  
+
   if(!dados[4][1]) { return }
   var header = true;
-  
+
   //Style Generator: https://www.tablesgenerator.com/html_tables
   var header_style = 'font-family:Arial, sans-serif;font-size:10px;font-weight:normal;padding:2px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;font-weight:bold;background-color:#2f5496;color:#ffffff;text-align:center;vertical-align:top;';
   var header_noticias_style = 'font-family:Arial, sans-serif;font-size:10px;font-weight:normal;padding:2px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;font-weight:bold;background-color:#2f5496;color:#ffffff;text-align:left;vertical-align:top;';
-  
+
   var body_style = 'font-family:Arial, sans-serif;font-size:10px;padding:2px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;text-align:center;';
   var body_noticias_style = 'font-family:Arial, sans-serif;font-size:10px;padding:2px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;text-align:left;';
-  
+
   var negative_style1 = 'color:#ff0000;';
   var negative_style2 = 'color:#ff0000;font-weight:bold;';
   var negative_style3 = 'color:#ffffff;font-weight:bold;background-color:#fe0000;';
   var positive_style = 'color:#0000ff;';
   var value, style;
-  
+
   var resposta = ''; 
   resposta = banner(resposta)   
   resposta = marketing(resposta)    
-  
+
   if (dados[1][0]) {    
     resposta += '<table style="border-collapse:collapse;border-spacing:0;">';
-    
+
     for(var i=0 ; i< dados.length ; i++) {
       if(dados[i][1] != '') {
         if(header){
@@ -2285,18 +2285,18 @@ function email_Carteira(tss,user_email) {
           header = false;
         } else {
           resposta += '<tr>';
-          
+
           resposta += '  <td style ="' + body_style + '"><b>'+ dados[i][0]+ '</b></td>';
           resposta += '  <td style ="' + body_style + '">'+ parseFloat(dados[i][1]).toFixed(2) + '</td>';
-          
+
           value = parseFloat(dados[i][2]).toFixed(2);
           if(value < 0){ style = body_style + negative_style1; } else { style = body_style + positive_style; }
           resposta += '  <td style ="' + style + '">'+ value + '</td>';
-          
+
           value = parseFloat(dados[i][3]*100).toFixed(2);
           if(value < -10){ style = body_style + negative_style3; } else if(value < -5){ style = body_style + negative_style2; } else if(value < 0) { style = body_style + negative_style1; } else { style = body_style + positive_style; }
           resposta += '  <td style ="' + style + '">'+ value +'%' + '</td>';
-          
+
           resposta += '</tr>';
         }
       }
@@ -2304,27 +2304,27 @@ function email_Carteira(tss,user_email) {
     resposta += '</table>';
     resposta += '<br>';
   }  
-  
+
   var subject = 'Relatório Diário: '+tss.getName();
-  
+
   //Plantão de Notícias
   resposta += '<table style="border-collapse:collapse;border-spacing:0;">';
   resposta += '<tr>';
   resposta += '  <th style ="' + header_noticias_style + '">Plantão de Notícias Bovespa</th>';
   resposta += '</tr>'; 
-  
+
   var owner = tss.getOwner().toString().trim().toLowerCase();
   var url = sistema()+'alpha.php?key=196132&email='+owner; 
   var responseData = UrlFetchApp.fetch(url).getContentText();  
   var usuarioAlpha = (responseData.indexOf(owner)>=0);
-  
+
   if(usuarioAlpha) {    
     var noticia = [];
     var noticia_existe = false;    
     var noticias;
     var json_Noticias = jsonNoticias();
     //Logger.log(json_Noticias)
-    
+
     if(json_Noticias[0]['NwsMsg']['id']=='error') {    
       resposta += '<tr>';
       resposta += '  <td style ="' + body_noticias_style + '">Ops! Infelizmente o sistema da B3 fora do ar no momento!</td>';
@@ -2335,11 +2335,11 @@ function email_Carteira(tss,user_email) {
       for(var i=1 ; i<dados.length; i++) {      
         noticias = cache.get("noticias")
         if(!noticias) {noticias =""}
-        
+
         if(dados[i][0]) {
           if(noticias.indexOf("("+dados[i][0].trim())>=0){continue}
           if(dados[i][0]=="IBOV"||dados[i][0]=="IFIX"||dados[i][0]=="CARTEIRA"||isNaN(dados[i][0].trim().substring(4,5)) ) {continue}        
-          
+
           try { 
             noticia = getNoticiasAtivo2(dados[i][0],json_Noticias)
             if(noticia[0]) {            
@@ -2354,12 +2354,12 @@ function email_Carteira(tss,user_email) {
       noticias = cache.get("noticias")
       noticias = noticias.split('***')
       cache.remove("noticias")
-      
+
       var noticia = []
       for (var k=1; k<noticias.length; k++){    
         noticia.push(noticias[k].split(","))    
       }    
-      
+
       if(noticia[0]){
         for(var j=0; j<noticia.length; j++){
           resposta += '<tr>';
@@ -2368,13 +2368,13 @@ function email_Carteira(tss,user_email) {
           noticia_existe = true
         }
       }    
-      
+
       if (!noticia_existe){
         resposta += '<tr>';
         resposta += '  <td style ="' + body_noticias_style + '">Nenhuma nova notícia sobre seus ativos no momento!</td>';
         resposta += '</tr>';   
       }
-      
+
     }    
   } else {
     resposta += '<tr>';
@@ -2382,23 +2382,23 @@ function email_Carteira(tss,user_email) {
     resposta += '</tr>';    
   }  
   resposta += '</table>';    
-  
+
   resposta = msg_rodape1(resposta) 
   resposta = msg_rodape2(resposta) 
-  
+
   send_mail(user_email,subject,resposta) 
 }
 
 //PEGA AS NOTICIAS DOS ATIVOS DO SITE DA B3
 function jsonNoticias(ativo,inicio,fim){
   if(!ativo){ativo = ''} else {ativo = ativo.trim().substring(0, 4)}
-  
+
   var date = Utilities.formatDate(new Date(), 'America/Sao_Paulo', 'yyyy-MM-dd');
   if(!inicio){inicio = date}
   if(!fim){fim = date}  
   //inicio = '2020-03-13'
   //fim = '2020-03-13'
-  
+
   var https = 'https://';
   var url = https+'sistemasweb.b3.com.br/PlantaoNoticias/Noticias/ListarTitulosNoticias?agencia=18&palavra='+ativo+'&dataInicial='+inicio+'&dataFinal='+fim;
 
@@ -2410,7 +2410,7 @@ function jsonNoticias(ativo,inicio,fim){
       'url': 'https://sistemasweb.b3.com.br/PlantaoNoticias/Noticias/ListarTitulosNoticias?agencia=18&palavra=&dataInicial='+inicio+'&dataFinal='+fim
     }
   }] 
-  
+
   try{
     //var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
     var response = UrlFetchApp.fetch(url);
@@ -2418,9 +2418,9 @@ function jsonNoticias(ativo,inicio,fim){
   } catch (error) {
     jsonNoticias = error_msg;
   }  
-  
+
   if(jsonNoticias == null || !jsonNoticias[0] ) { jsonNoticias = error_msg }  
-  
+
   //Logger.log(jsonNoticias)
   return jsonNoticias;
 }
@@ -2431,25 +2431,25 @@ function getNoticiasAtivo2(ativo,jsonNoticias){
   ativo = ativo.trim().substring(0, 4);
   var result = [];
   var result_temp = [];
-  
+
   var jsonAtivo = []
   for (var x in jsonNoticias){
     var noticia_titulo = jsonNoticias[x]['NwsMsg']['headline'].split(" - ");
-    
+
     var noticia_txt = jsonNoticias[x]['NwsMsg']['headline']
     if(noticia_txt.indexOf('('+ativo)<0 || noticia_txt.indexOf('(C)')>=0) {continue}   
-    
+
     var idNoticia = jsonNoticias[x]['NwsMsg']['id']
     var dataNoticia = jsonNoticias[x]['NwsMsg']['dateTime']
     //var dataNoticia = jsonNoticias[x]['NwsMsg']['dateTime'].split(' ')[0]
-    
+
     var https = 'https://';    
     var noticia_url = https+'sistemasweb.b3.com.br/PlantaoNoticias/Noticias/Detail?idNoticia='+idNoticia
     noticia_url += '&agencia=18&dataNoticia='+dataNoticia
-    
+
     result_temp.push((noticia_url+","+noticia_titulo.toString()).split(","))
   }    
-  
+
   result_temp = result_temp.sort(function(a,b) {    
     var o1 = a[1].trim();
     var o2 = b[1].trim();
@@ -2457,7 +2457,7 @@ function getNoticiasAtivo2(ativo,jsonNoticias){
     if (o1 > o2) return 1;  
     return 0;
   });
-  
+
   var qtd = result_temp.length;    
   for (var j = 0; j < qtd; j++) {
     if(j == 0) {
@@ -2484,56 +2484,56 @@ function noticias(){
   var botao = ativo.getSelectedButton();
   var texto_ativo = ativo.getResponseText();  
   if (botao!=ui.Button.OK){ return }        
-  
+
   var inicio = ui.prompt(
     'Informe a data de início (ex: 01/02/2018)',
     ui.ButtonSet.OK_CANCEL);  
   var botao = inicio.getSelectedButton();
   var texto_inicio = inicio.getResponseText();
   if (botao!=ui.Button.OK){ return }      
-  
+
   var fim = ui.prompt(
     'Informe a data de fim (ex: 09/02/2018)',
     ui.ButtonSet.OK_CANCEL);  
   var botao = fim.getSelectedButton();
   var texto_fim = fim.getResponseText();
   if (botao!=ui.Button.OK){ return }
-  
+
   if(ativo && inicio && fim) { 
     ativo = texto_ativo.trim()   
     inicio = texto_inicio.trim()
     fim = texto_fim.trim()    
-    
+
     var resposta = '';
     var inicio_aux = inicio
     var fim_aux = fim
-    
+
     inicio = inicio.split('/')
     inicio = inicio[2]+'-'+inicio[1]+'-'+inicio[0]    
-    
+
     fim = fim.split('/')
     fim = fim[2]+'-'+fim[1]+'-'+fim[0];
-    
+
     var header_noticias_style = 'font-family:Arial, sans-serif;font-size:10px;font-weight:normal;padding:2px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;font-weight:bold;background-color:#2f5496;color:#ffffff;text-align:left;vertical-align:top;';    
     var body_noticias_style = 'font-family:Arial, sans-serif;font-size:10px;padding:2px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;text-align:left;';
-     
+
     resposta = banner(resposta)   
     resposta = marketing(resposta)   
-    
+
     //Plantão de Notícias
     resposta += '<table style="border-collapse:collapse;border-spacing:0;">';
     resposta += '<tr>';
     resposta += '  <th style ="' + header_noticias_style + '">Plantão de Notícias Bovespa</th>';
     resposta += '</tr>';  
-    
+
     var tss = SpreadsheetApp.getActiveSpreadsheet()
     var owner = tss.getOwner().toString().trim().toLowerCase();
     var url = sistema()+'alpha.php?key=196132&email='+owner; 
     var responseData = UrlFetchApp.fetch(url).getContentText()   
-    
+
     if(responseData.indexOf(owner)>=0) {     
       var json_noticia = jsonNoticias(ativo,inicio,fim);      
-      
+
       if(json_noticia[0]['NwsMsg']['id']=='error') {    
         resposta += '<tr>';
         resposta += '  <td style ="' + body_noticias_style + '">Ops! Infelizmente o sistema da B3 fora do ar!</td>';
@@ -2559,9 +2559,9 @@ function noticias(){
       resposta += '</tr>';    
     }  
     resposta += '</table>';   
-    
+
     resposta = msg_rodape2(resposta)
-    
+
     var tss = SpreadsheetApp.getActiveSpreadsheet()
     var tss_leiame = tss.getSheetByName('LeiaMe')
     var user_email = tss_leiame.getRange(9,2).getValue()     
@@ -2580,48 +2580,31 @@ function setDIRPF(){
     'ATENÇÃO! Esse recurso deve ser utilizado apenas como auxlío no preenchimento de sua declaração.\nUtilize os documentos oficiais para conferência e confirmação dos dados!\n\n Deseja continuar?',
     ui.ButtonSet.YES_NO);  
   if (result!=ui.Button.YES){ return }   
-  
+
   var tss = SpreadsheetApp.getActiveSpreadsheet();  
   var owner = tss.getOwner().toString().trim().toLowerCase();  
   var url = sistema()+'alpha.php?key=196132&email='+owner; 
   var responseData = UrlFetchApp.fetch(url).getContentText()  
-  
+
   if(responseData.indexOf(owner)>=0) {          
     var tss_dirpf = tss.getSheetByName('DIRPF');
-    
+
     var dirpf_ativo_range = tss_dirpf.getRange('DIRPF_ATIVO');
     var dirpf_cnpj_range  = tss_dirpf.getRange('DIRPF_CNPJ');
-    
+
     var aux = tss_dirpf.getRange('DIRPF_ATIVO').getValue(); 
-    
+
     if (aux==''){      
       var formula = '='+tss_dirpf.getRange('DIRPF_ATIVO2').getValue();
       tss_dirpf.getRange('DIRPF_ATIVO').setFormula(formula);
-      
+
       var formula = '='+tss_dirpf.getRange('DIRPF_ISENTO2').getValue();
       tss_dirpf.getRange('DIRPF_ISENTO').setFormula(formula);
-      
+
       var formula = '='+tss_dirpf.getRange('DIRPF_EXCLUSIVO2').getValue();
       tss_dirpf.getRange('DIRPF_EXCLUSIVO').setFormula(formula); 
     }    
   }  else {
-    var tss_dirpf = tss.getSheetByName('DIRPF');
-    
-    var dirpf_ativo_range = tss_dirpf.getRange('DIRPF_ATIVO');
-    var dirpf_cnpj_range  = tss_dirpf.getRange('DIRPF_CNPJ');
-    
-    var aux = tss_dirpf.getRange('DIRPF_ATIVO').getValue(); 
-    
-    if (aux==''){      
-      var formula = '='+tss_dirpf.getRange('DIRPF_ATIVO2').getValue();
-      tss_dirpf.getRange('DIRPF_ATIVO').setFormula(formula);
-      
-      var formula = '='+tss_dirpf.getRange('DIRPF_ISENTO2').getValue();
-      tss_dirpf.getRange('DIRPF_ISENTO').setFormula(formula);
-      
-      var formula = '='+tss_dirpf.getRange('DIRPF_EXCLUSIVO2').getValue();
-      tss_dirpf.getRange('DIRPF_EXCLUSIVO').setFormula(formula); 
-    }    
     ui.alert('Usuário ('+owner+') não identificado! \n Seja Usuário Alpha para ativar esse recurso!\n Acesse dlombelloplanilhas.com')
   }  
 }
@@ -2664,19 +2647,19 @@ function sobre(){
   var ui = SpreadsheetApp.getUi(); 
   var tss = SpreadsheetApp.getActiveSpreadsheet()  
   var owner = tss.getOwner().toString().trim().toLowerCase();
-  
+
   var url = sistema()+'alpha_full.php?key=196132&email='+owner; 
   var responseData = UrlFetchApp.fetch(url).getContentText();   
   responseData = Utilities.parseCsv(responseData);
-  
+
   var text = "";
   if(responseData[0]){
     text += 'Usuário Alpha: '+ responseData[0][0]+'\n'
     text += 'email: '+ owner +'\n\n'
-    
+
     text += 'Plano: '+ responseData[0][2]+'\n' 
     text += 'Data Início: '+ responseData[0][1]+'\n'    
-    
+
     text += '\n\n www.dlombelloplanilhas.com | dlombelloplanilhas@gmail.com'
     ui.alert(text);    
   } else {    
@@ -2693,11 +2676,11 @@ function hitCounter() {
   var tss = SpreadsheetApp.getActiveSpreadsheet();
   var id = tss.getId();
   var owner = tss.getOwner().toString().trim().toLowerCase();  
-  
+
   var url = 'https://sistema.dlombelloplanilhas.com/dlombello-server-app/hit-counter?';
   url += 'sid=' + id;
   url += '&uid=' + owner;
-  
+
   try {
     UrlFetchApp.fetch(url);
   } catch (error) {
@@ -2712,14 +2695,14 @@ function email_usuario_alpha(){
   var tss = SpreadsheetApp.getActiveSpreadsheet()  
   var tss_leiame = tss.getSheetByName('LeiaMe')    
   var email_date = tss_leiame.getRange(9,2,1,2).getValues();  
-  
+
   var date = new Date();
   var dataEnvio = new Date(email_date[0][1]);
-  
+
   //Email enviado nos ultimos 30 dias
   if(email_date[0][1]) { dataEnvio.setDate(dataEnvio.getDate() + 30) }   
   if(email_date && date<dataEnvio) { return }
-  
+
   //Verifica no servidor data de vencimento da assinatua e se é um usuário alpha
   var owner = tss.getOwner().toString().trim().toLowerCase();
   var url = sistema()+'alpha_full.php?key=196132&email='+owner; 
@@ -2728,53 +2711,53 @@ function email_usuario_alpha(){
   //Logger.log(responseData)
   responseData = Utilities.parseCsv(responseData);    
   if(!responseData[0]){ return }  
-  
+
   var plano = responseData[0][2];
   var dataInicio =  new Date(responseData[0][1]);
   var vencimento = dataInicio;
-  
+
   //Envia email caso esteja vencido 
   if(plano=='ANUAL') {vencimento.setDate(vencimento.getDate() + 367)}
   if(plano=='MENSAL') {vencimento.setDate(vencimento.getDate() + 32)}      
   if(date < vencimento || plano == 'ISENTO') { return }
-  
+
   var email = email_date[0][0]+','+owner;
   var subject = 'VENCIMENTO DO PLANO: Usuário Alpha('+plano+') - dlombelloplanilhas';    
-  
+
   var resposta = '';
   resposta += 'Olá, tudo bem?'
   resposta += '<br><br>Primeiramente gostaria de agradecer pelo seu apoio durante esse peróido que estivemos juntos!'
-  
+
   resposta += '<br><br>Seu plano: '+plano
   resposta += '<br>Início: '+dataInicio
   resposta += '<br>Vencimento: '+vencimento
-  
+
   resposta += '<br><br>Caso já tenha feito o pagamento da doação recentemente, desconsidere esse email!'  
-  
+
   resposta += '<br><br>Caso queira continuar a contribuir para manutenção e melhorias do projeto e os benefícios de Usuário Alpa, faça uma nova doação pelo link abaixo:'  
-  
+
   resposta += '<br><br><b>PAGAMENTO ANUAL</b>'; 
   resposta += '<br>Efetue o pagamento da doação e não esqueça de atualizar o seu cadastro no formulário do site.';  
   resposta += "<br>Para verificar seu cadastro, na planilha, rode o script: dlombello > Sobre / Usuário Alpha"; 
-  
+
   resposta += "<br><br>https://www.dlombelloplanilhas.com/apoie-me/usu%C3%A1rio-alpha";
-  
+
   resposta += '<br><br><b>PAGAMENTO RECORRENTE</b>'; 
   resposta += '<br>Caso tenha feito um pagamento recorrente no <b>Mercado Pago</b> ou <b>PayPal</b>, verifique se o meio de pagamento encontra-se válido pelos links abaixo.';  
-  
+
   resposta += '<br><br>https://www.mercadopago.com.br/subscriptions/list/'
   resposta += '<br>https://www.paypal.com/myaccount/autopay/'
-  
+
   resposta += '<br><br>Qualquer problema entre em contato!';  
-  
+
   resposta += '<br><br>Mais uma vez obrigado pelo apoio e bons investimentos!';   
-  
+
   send_mail(email,subject,resposta)
   var ano = (date.getFullYear())+""
   var mes = (date.getMonth()+1)+"" ;  if(mes.length==1) {mes = "0"+mes} 
   var dia = (date.getDate())+""    ;  if(dia.length==1) {dia = "0"+dia}             
   var data = dia+'/'+mes+'/'+ano+""
-  
+
   tss_leiame.getRange(9,3).setValue(data);
   return result;
 }
@@ -2807,20 +2790,20 @@ function banner(resposta) {
   var oss = SpreadsheetApp.openById(subData())
   var oss_banner = oss.getSheetByName('Banner')
   var banner = oss_banner.getRange(2,1,oss_banner.getLastRow()-1,oss_banner.getLastColumn()).getValues()  
-  
+
   if(banner) {
     var num = banner[Math.floor(Math.random() * banner.length)][0] 
-    
+
     var url = banner[num][1]
     var img = banner[num][2]
     var tex = banner[num][3]
-    
+
     resposta += '<a href="'+url+'">'
     resposta += '<img src="'+img+'" alt="dlombelloplanilhas.com" '
     //resposta += 'width="450" height="80" '
     resposta += 'class="media-object img-responsive img-thumbnail">'
     resposta += '</a>'
-    
+
     if(tex) {
       resposta += '<br>'
       resposta += tex  
@@ -2832,10 +2815,10 @@ function banner(resposta) {
 function marketing(resposta) {
   var oss = SpreadsheetApp.openById(subData())
   var marketing = oss.getSheetByName('Marketing').getDataRange().getValues()
-  
+
   resposta += "<b>Olá investidor, "+ msg_incentivo()+"</b>"
   resposta += "<br><br><a href='https://www.dlombelloplanilhas.com/apoie-me/usu%C3%A1rio-alpha'><b>Clique Aqui</b></a> para conhecer as vantagens do <b>Usuário Alpha</b> ou fazer uma <b>Doação</b> de apoio."
-  
+
   if (marketing) {
     for (var i=0 ; i< marketing.length ; i++) {  
       if(marketing[i][0]) { resposta += marketing[i][0] }   
@@ -2886,17 +2869,17 @@ function date_GMT(dados) {
 //VERIFICA SE A DATA É DIA UTIL OU FERIADO DO ANO
 function diaUtil(){
   var result = true;
-  
+
   var feriados =['01/Jan','24/Feb','25/Feb','10/Apr','21/Apr','01/May','11/Jun','09/Jul','07/Sep','12/Oct','02/Nov','20/Nov','24/Dec','25/Dec','31/Dec'];
   feriados = feriados.toString();    
-  
+
   var day = new Date().toString().split(' ');
-  
+
   if(day[0] == 'Sat' || day[0] == 'Sun') {result = false}  
-  
+
   var date = day[2]+'/'+day[1];
   if(feriados.indexOf(date)>=0) {result = false}  
-  
+
   return result;
 }
 
