@@ -2,7 +2,9 @@ function sistema(){ return "https://sistema.dlombelloplanilhas.com/"}
 //////MORTE//////////////////////////////////////////////
 //MENU DLOMBELLO
 ////////////////////////////////////////////////////////////////////////////
-function setMenu() {   
+function setMenu() {
+  var ssNew = SpreadsheetApp.create("Disse que criava");
+  Logger.log(ssNew.getUrl());
   var ui = SpreadsheetApp.getUi()
   ui.createMenu('dlombello')  
   .addSubMenu(ui.createMenu('Importar Abas')
