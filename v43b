@@ -3,8 +3,6 @@ function sistema(){ return "https://sistema.dlombelloplanilhas.com/"}
 //MENU DLOMBELLO
 ////////////////////////////////////////////////////////////////////////////
 function setMenu() {
-  var files = DriveApp.getFiles()   
-  var ui = SpreadsheetApp.getUi()
   ui.createMenu('dlombello')  
   .addSubMenu(ui.createMenu('Importar Abas')
               .addItem('Informar URL de Origem', 'URL_ORIGEM')
