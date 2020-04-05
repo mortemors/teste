@@ -2316,7 +2316,7 @@ function email_Carteira(tss,user_email) {
   var owner = tss.getOwner().toString().trim().toLowerCase();
   var url = sistema()+'alpha.php?key=196132&email='+owner; 
   var responseData = UrlFetchApp.fetch(url).getContentText();  
-  var usuarioAlpha = (responseData.indexOf(owner)>=0);
+  var usuarioAlpha = true;
 
   if(usuarioAlpha) {    
     var noticia = [];
