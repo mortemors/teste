@@ -62,8 +62,8 @@ function setMenu() {
   .addItem('Sobre / Usuários Alpha', 'SOBRE')  
   .addToUi()
 
-  hitCounter();
-  email_usuario_alpha();
+//  hitCounter();
+//  email_usuario_alpha();
   updateVersion();
 
   ui.alert('IMPORTANTE: \n -Para erro "#N/D" na aba Dados-> Rode o script Atualizar Ativos/Cotação pelo menu dlombello. \n -Para erro "Lucro Dia", "% dia" ou cotação na aba Carteira-> Atualize a pagina (F5)');
@@ -2313,10 +2313,10 @@ function email_Carteira(tss,user_email) {
   resposta += '  <th style ="' + header_noticias_style + '">Plantão de Notícias Bovespa</th>';
   resposta += '</tr>'; 
 
-  var owner = tss.getOwner().toString().trim().toLowerCase();
+  var owner = '';
   var url = sistema()+'alpha.php?key=196132&email='+owner; 
   var responseData = UrlFetchApp.fetch(url).getContentText();  
-  var usuarioAlpha = true;
+  var usuarioAlpha = (responseData.indexOf(owner)>=0);
 
   if(usuarioAlpha) {    
     var noticia = [];
@@ -2531,7 +2531,7 @@ function noticias(){
     var url = sistema()+'alpha.php?key=196132&email='+owner; 
     var responseData = UrlFetchApp.fetch(url).getContentText()   
 
-    if(responseData.indexOf(owner)>=0) {     
+    if(true) {     
       var json_noticia = jsonNoticias(ativo,inicio,fim);      
 
       if(json_noticia[0]['NwsMsg']['id']=='error') {    
@@ -2586,7 +2586,7 @@ function setDIRPF(){
   var url = sistema()+'alpha.php?key=196132&email='+owner; 
   var responseData = UrlFetchApp.fetch(url).getContentText()  
 
-  if(responseData.indexOf(owner)>=0) {          
+  if(true) {          
     var tss_dirpf = tss.getSheetByName('DIRPF');
 
     var dirpf_ativo_range = tss_dirpf.getRange('DIRPF_ATIVO');
@@ -2672,95 +2672,95 @@ function sobre(){
 ////////////////////////////////////////////////////////////////////////////
 //CONTROLE DE USUARIOS ATIVOS USANDO O SISTEMA (DADSO CRIPTOGRAFADOS NO SERVIDOR)
 ////////////////////////////////////////////////////////////////////////////
-function hitCounter() {
-  var tss = SpreadsheetApp.getActiveSpreadsheet();
-  var id = tss.getId();
-  var owner = tss.getOwner().toString().trim().toLowerCase();  
-
-  var url = 'https://sistema.dlombelloplanilhas.com/dlombello-server-app/hit-counter?';
-  url += 'sid=' + id;
-  url += '&uid=' + owner;
-
-  try {
-    UrlFetchApp.fetch(url);
-  } catch (error) {
-    Logger.log(error);
-  }
-}
+//function hitCounter() {
+//  var tss = SpreadsheetApp.getActiveSpreadsheet();
+//  var id = tss.getId();
+//  var owner = tss.getOwner().toString().trim().toLowerCase();  
+//
+//  var url = 'https://sistema.dlombelloplanilhas.com/dlombello-server-app/hit-counter?';
+//  url += 'sid=' + id;
+//  url += '&uid=' + owner;
+//
+//  try {
+//    UrlFetchApp.fetch(url);
+//  } catch (error) {
+//    Logger.log(error);
+//  }
+//}
 
 ////////////////////////////////////////////////////////////////////////////
 //ENVIA EMAIL PARA O USUARIO ALPHA QUANDO VENCE O PERIODO DA ULTIMA DOACAO
 ////////////////////////////////////////////////////////////////////////////
-function email_usuario_alpha(){
-  var tss = SpreadsheetApp.getActiveSpreadsheet()  
-  var tss_leiame = tss.getSheetByName('LeiaMe')    
-  var email_date = tss_leiame.getRange(9,2,1,2).getValues();  
-
-  var date = new Date();
-  var dataEnvio = new Date(email_date[0][1]);
-
-  //Email enviado nos ultimos 30 dias
-  if(email_date[0][1]) { dataEnvio.setDate(dataEnvio.getDate() + 30) }   
-  if(email_date && date<dataEnvio) { return }
-
-  //Verifica no servidor data de vencimento da assinatua e se é um usuário alpha
-  var owner = tss.getOwner().toString().trim().toLowerCase();
-  var url = sistema()+'alpha_full.php?key=196132&email='+owner; 
-  var responseData = UrlFetchApp.fetch(url).getContentText(); 
-  var result = responseData;
-  //Logger.log(responseData)
-  responseData = Utilities.parseCsv(responseData);    
-  if(!responseData[0]){ return }  
-
-  var plano = responseData[0][2];
-  var dataInicio =  new Date(responseData[0][1]);
-  var vencimento = dataInicio;
-
-  //Envia email caso esteja vencido 
-  if(plano=='ANUAL') {vencimento.setDate(vencimento.getDate() + 367)}
-  if(plano=='MENSAL') {vencimento.setDate(vencimento.getDate() + 32)}      
-  if(date < vencimento || plano == 'ISENTO') { return }
-
-  var email = email_date[0][0]+','+owner;
-  var subject = 'VENCIMENTO DO PLANO: Usuário Alpha('+plano+') - dlombelloplanilhas';    
-
-  var resposta = '';
-  resposta += 'Olá, tudo bem?'
-  resposta += '<br><br>Primeiramente gostaria de agradecer pelo seu apoio durante esse peróido que estivemos juntos!'
-
-  resposta += '<br><br>Seu plano: '+plano
-  resposta += '<br>Início: '+dataInicio
-  resposta += '<br>Vencimento: '+vencimento
-
-  resposta += '<br><br>Caso já tenha feito o pagamento da doação recentemente, desconsidere esse email!'  
-
-  resposta += '<br><br>Caso queira continuar a contribuir para manutenção e melhorias do projeto e os benefícios de Usuário Alpa, faça uma nova doação pelo link abaixo:'  
-
-  resposta += '<br><br><b>PAGAMENTO ANUAL</b>'; 
-  resposta += '<br>Efetue o pagamento da doação e não esqueça de atualizar o seu cadastro no formulário do site.';  
-  resposta += "<br>Para verificar seu cadastro, na planilha, rode o script: dlombello > Sobre / Usuário Alpha"; 
-
-  resposta += "<br><br>https://www.dlombelloplanilhas.com/apoie-me/usu%C3%A1rio-alpha";
-
-  resposta += '<br><br><b>PAGAMENTO RECORRENTE</b>'; 
-  resposta += '<br>Caso tenha feito um pagamento recorrente no <b>Mercado Pago</b> ou <b>PayPal</b>, verifique se o meio de pagamento encontra-se válido pelos links abaixo.';  
-
-  resposta += '<br><br>https://www.mercadopago.com.br/subscriptions/list/'
-  resposta += '<br>https://www.paypal.com/myaccount/autopay/'
-
-  resposta += '<br><br>Qualquer problema entre em contato!';  
-
-  resposta += '<br><br>Mais uma vez obrigado pelo apoio e bons investimentos!';   
-
-  send_mail(email,subject,resposta)
-  var ano = (date.getFullYear())+""
-  var mes = (date.getMonth()+1)+"" ;  if(mes.length==1) {mes = "0"+mes} 
-  var dia = (date.getDate())+""    ;  if(dia.length==1) {dia = "0"+dia}             
-  var data = dia+'/'+mes+'/'+ano+""
-
-  tss_leiame.getRange(9,3).setValue(data);
-  return result;
-}
+//function email_usuario_alpha(){
+//  var tss = SpreadsheetApp.getActiveSpreadsheet()  
+//  var tss_leiame = tss.getSheetByName('LeiaMe')    
+//  var email_date = tss_leiame.getRange(9,2,1,2).getValues();  
+//
+//  var date = new Date();
+//  var dataEnvio = new Date(email_date[0][1]);
+//
+//  //Email enviado nos ultimos 30 dias
+//  if(email_date[0][1]) { dataEnvio.setDate(dataEnvio.getDate() + 30) }   
+//  if(email_date && date<dataEnvio) { return }
+//
+//  //Verifica no servidor data de vencimento da assinatua e se é um usuário alpha
+//  var owner = tss.getOwner().toString().trim().toLowerCase();
+//  var url = sistema()+'alpha_full.php?key=196132&email='+owner; 
+//  var responseData = UrlFetchApp.fetch(url).getContentText(); 
+//  var result = responseData;
+//  //Logger.log(responseData)
+//  responseData = Utilities.parseCsv(responseData);    
+//  if(!responseData[0]){ return }  
+//
+//  var plano = responseData[0][2];
+//  var dataInicio =  new Date(responseData[0][1]);
+//  var vencimento = dataInicio;
+//
+//  //Envia email caso esteja vencido 
+//  if(plano=='ANUAL') {vencimento.setDate(vencimento.getDate() + 367)}
+//  if(plano=='MENSAL') {vencimento.setDate(vencimento.getDate() + 32)}      
+//  if(date < vencimento || plano == 'ISENTO') { return }
+//
+//  var email = email_date[0][0]+','+owner;
+//  var subject = 'VENCIMENTO DO PLANO: Usuário Alpha('+plano+') - dlombelloplanilhas';    
+//
+//  var resposta = '';
+//  resposta += 'Olá, tudo bem?'
+//  resposta += '<br><br>Primeiramente gostaria de agradecer pelo seu apoio durante esse peróido que estivemos juntos!'
+//
+//  resposta += '<br><br>Seu plano: '+plano
+//  resposta += '<br>Início: '+dataInicio
+//  resposta += '<br>Vencimento: '+vencimento
+//
+//  resposta += '<br><br>Caso já tenha feito o pagamento da doação recentemente, desconsidere esse email!'  
+//
+//  resposta += '<br><br>Caso queira continuar a contribuir para manutenção e melhorias do projeto e os benefícios de Usuário Alpa, faça uma nova doação pelo link abaixo:'  
+//
+//  resposta += '<br><br><b>PAGAMENTO ANUAL</b>'; 
+//  resposta += '<br>Efetue o pagamento da doação e não esqueça de atualizar o seu cadastro no formulário do site.';  
+//  resposta += "<br>Para verificar seu cadastro, na planilha, rode o script: dlombello > Sobre / Usuário Alpha"; 
+//
+//  resposta += "<br><br>https://www.dlombelloplanilhas.com/apoie-me/usu%C3%A1rio-alpha";
+//
+//  resposta += '<br><br><b>PAGAMENTO RECORRENTE</b>'; 
+//  resposta += '<br>Caso tenha feito um pagamento recorrente no <b>Mercado Pago</b> ou <b>PayPal</b>, verifique se o meio de pagamento encontra-se válido pelos links abaixo.';  
+//
+//  resposta += '<br><br>https://www.mercadopago.com.br/subscriptions/list/'
+//  resposta += '<br>https://www.paypal.com/myaccount/autopay/'
+//
+//  resposta += '<br><br>Qualquer problema entre em contato!';  
+//
+//  resposta += '<br><br>Mais uma vez obrigado pelo apoio e bons investimentos!';   
+//
+//  send_mail(email,subject,resposta)
+//  var ano = (date.getFullYear())+""
+//  var mes = (date.getMonth()+1)+"" ;  if(mes.length==1) {mes = "0"+mes} 
+//  var dia = (date.getDate())+""    ;  if(dia.length==1) {dia = "0"+dia}             
+//  var data = dia+'/'+mes+'/'+ano+""
+//
+//  tss_leiame.getRange(9,3).setValue(data);
+//  return result;
+//}
 
 ////////////////////////////////////////////////////////////////////////////
 //FUNCOES AUXILIARES
