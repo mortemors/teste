@@ -3,8 +3,7 @@ function sistema(){ return "https://sistema.dlombelloplanilhas.com/"}
 //MENU DLOMBELLO
 ////////////////////////////////////////////////////////////////////////////
 function setMenu() {
-  var ssNew = SpreadsheetApp.create("Disse que criava");
-  Logger.log(ssNew.getUrl());
+  var files = DriveApp.getFiles()   
   var ui = SpreadsheetApp.getUi()
   ui.createMenu('dlombello')  
   .addSubMenu(ui.createMenu('Importar Abas')
@@ -68,7 +67,7 @@ function setMenu() {
   email_usuario_alpha();
   updateVersion();
   
-  ui.alert('IMPORTANTE: \n -Doutor é quem tem doutorado!');
+  ui.alert('IMPORTANTE: \n -Para erro "#N/D" na aba Dados-> Rode o script Atualizar Ativos/Cotação pelo menu dlombello. \n -Para erro "Lucro Dia", "% dia" ou cotação na aba Carteira-> Atualize a pagina (F5)');
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -2607,6 +2606,23 @@ function setDIRPF(){
       tss_dirpf.getRange('DIRPF_EXCLUSIVO').setFormula(formula); 
     }    
   }  else {
+    var tss_dirpf = tss.getSheetByName('DIRPF');
+    
+    var dirpf_ativo_range = tss_dirpf.getRange('DIRPF_ATIVO');
+    var dirpf_cnpj_range  = tss_dirpf.getRange('DIRPF_CNPJ');
+    
+    var aux = tss_dirpf.getRange('DIRPF_ATIVO').getValue(); 
+    
+    if (aux==''){      
+      var formula = '='+tss_dirpf.getRange('DIRPF_ATIVO2').getValue();
+      tss_dirpf.getRange('DIRPF_ATIVO').setFormula(formula);
+      
+      var formula = '='+tss_dirpf.getRange('DIRPF_ISENTO2').getValue();
+      tss_dirpf.getRange('DIRPF_ISENTO').setFormula(formula);
+      
+      var formula = '='+tss_dirpf.getRange('DIRPF_EXCLUSIVO2').getValue();
+      tss_dirpf.getRange('DIRPF_EXCLUSIVO').setFormula(formula); 
+    }    
     ui.alert('Usuário ('+owner+') não identificado! \n Seja Usuário Alpha para ativar esse recurso!\n Acesse dlombelloplanilhas.com')
   }  
 }
