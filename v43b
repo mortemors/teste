@@ -3,6 +3,7 @@ function sistema(){ return "https://sistema.dlombelloplanilhas.com/"}
 //MENU DLOMBELLO
 ////////////////////////////////////////////////////////////////////////////
 function setMenu() {
+  var ui = SpreadsheedApp.getUi()
   ui.createMenu('dlombello')  
   .addSubMenu(ui.createMenu('Importar Abas')
               .addItem('Informar URL de Origem', 'URL_ORIGEM')
